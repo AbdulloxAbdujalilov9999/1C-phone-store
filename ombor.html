@@ -1,0 +1,929 @@
+<title>Ombor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F5F3EE; --surface:#FFFFFF; --surface-2:#ECE8DF; --border:#DEDACD;
+    --ink:#1C1A16; --ink-dim:#6E6A5C; --ink-faint:#9A9686;
+    --accent:#2A3B8F; --accent-ink:#FFFFFF; --accent-soft:#E7E9F7;
+    --gold:#966B27; --gold-soft:#F3E8D2;
+    --success:#1F7A55; --success-soft:#E1F1E8;
+    --danger:#B23A32; --danger-soft:#F7E4E1;
+    --slate:#5B6472; --slate-soft:#E8EAEE;
+    --shadow:0 1px 2px rgba(28,26,22,.06), 0 10px 28px -14px rgba(28,26,22,.22);
+    color-scheme:light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#161510; --surface:#1E1C16; --surface-2:#27241C; --border:#3A362A;
+      --ink:#F3F1E8; --ink-dim:#B3AE9C; --ink-faint:#847F6C;
+      --accent:#8593FF; --accent-ink:#141634; --accent-soft:#272B52;
+      --gold:#D9AE6B; --gold-soft:#372D1C;
+      --success:#52C08F; --success-soft:#1C3327;
+      --danger:#E38178; --danger-soft:#3A211E;
+      --slate:#9AA3B2; --slate-soft:#282B32;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -14px rgba(0,0,0,.65);
+      color-scheme:dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#161510; --surface:#1E1C16; --surface-2:#27241C; --border:#3A362A;
+    --ink:#F3F1E8; --ink-dim:#B3AE9C; --ink-faint:#847F6C;
+    --accent:#8593FF; --accent-ink:#141634; --accent-soft:#272B52;
+    --gold:#D9AE6B; --gold-soft:#372D1C;
+    --success:#52C08F; --success-soft:#1C3327;
+    --danger:#E38178; --danger-soft:#3A211E;
+    --slate:#9AA3B2; --slate-soft:#282B32;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -14px rgba(0,0,0,.65);
+    color-scheme:dark;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:'Manrope',ui-sans-serif,system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .mono{ font-family:'IBM Plex Mono',ui-monospace,monospace; font-variant-numeric:tabular-nums; }
+  h1,h2,h3{ font-family:'Manrope',sans-serif; margin:0; text-wrap:balance; }
+  button{ font-family:inherit; }
+  ::selection{ background:var(--accent-soft); }
+
+  .shell{ max-width:1180px; margin:0 auto; padding:0 20px 64px; }
+
+  /* header */
+  header.top{
+    position:sticky; top:env(safe-area-inset-top,0px); z-index:40;
+    background:var(--bg); border-bottom:1px solid var(--border);
+  }
+  .top-inner{
+    max-width:1180px; margin:0 auto; padding:16px 20px 0;
+    display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+  }
+  .brand{ display:flex; align-items:center; gap:10px; margin-right:auto; }
+  .brand-mark{ width:34px; height:34px; border-radius:9px; background:var(--accent); display:flex; align-items:center; justify-content:center; flex:none; }
+  .brand-name{ font-weight:800; font-size:19px; letter-spacing:-0.01em; }
+  .brand-sub{ font-size:12px; color:var(--ink-dim); margin-top:-2px; }
+  .status-dot{ width:8px; height:8px; border-radius:50%; background:var(--ink-faint); flex:none; transition:background .2s; }
+  .status-dot.live{ background:var(--success); }
+  .status-dot.off{ background:var(--danger); }
+  .status-wrap{ display:flex; align-items:center; gap:6px; font-size:12px; color:var(--ink-dim); }
+
+  nav.tabs{ display:flex; gap:4px; margin-top:14px; overflow-x:auto; scrollbar-width:none; }
+  nav.tabs::-webkit-scrollbar{ display:none; }
+  .tab-btn{
+    appearance:none; border:none; background:transparent; color:var(--ink-dim);
+    font-weight:700; font-size:14px; padding:10px 4px; border-bottom:2px solid transparent;
+    cursor:pointer; white-space:nowrap; margin-right:18px;
+  }
+  .tab-btn.active{ color:var(--ink); border-bottom-color:var(--accent); }
+  .tab-btn:hover{ color:var(--ink); }
+
+  main{ padding-top:22px; }
+  section{ display:none; }
+  section.active{ display:block; }
+
+  /* KPI cards */
+  .kpi-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:12px; margin-bottom:22px; }
+  .kpi{
+    background:var(--surface); border:1px solid var(--border); border-radius:14px;
+    padding:16px 16px 14px; box-shadow:var(--shadow);
+  }
+  .kpi-label{ font-size:12px; color:var(--ink-dim); font-weight:700; text-transform:uppercase; letter-spacing:.04em; }
+  .kpi-value{ font-family:'IBM Plex Mono',monospace; font-size:24px; font-weight:600; margin-top:6px; font-variant-numeric:tabular-nums; }
+  .kpi-value.success{ color:var(--success); }
+  .kpi-value.danger{ color:var(--danger); }
+  .kpi-value.gold{ color:var(--gold); }
+  .kpi-sub{ font-size:12px; color:var(--ink-faint); margin-top:4px; }
+
+  .panel-grid{ display:grid; grid-template-columns:1.4fr 1fr; gap:16px; align-items:start; }
+  @media (max-width:860px){ .panel-grid{ grid-template-columns:1fr; } }
+
+  .card{
+    background:var(--surface); border:1px solid var(--border); border-radius:14px;
+    padding:18px; box-shadow:var(--shadow); margin-bottom:16px;
+  }
+  .card h3{ font-size:14px; font-weight:800; margin-bottom:14px; display:flex; align-items:center; justify-content:space-between; }
+  .card h3 .hint{ font-size:11px; font-weight:600; color:var(--ink-faint); text-transform:none; }
+
+  /* bar chart */
+  .chart{ display:flex; align-items:flex-end; gap:14px; height:150px; padding-top:6px; }
+  .chart .col{ flex:1; display:flex; flex-direction:column; align-items:center; gap:8px; height:100%; justify-content:flex-end; }
+  .chart .bar-wrap{ width:100%; display:flex; justify-content:center; align-items:flex-end; height:110px; gap:4px; }
+  .chart .bar{ width:14px; border-radius:4px 4px 0 0; background:var(--accent); min-height:3px; position:relative; }
+  .chart .bar.profit{ background:var(--gold); }
+  .chart .col-label{ font-size:11px; color:var(--ink-dim); font-weight:600; }
+  .chart-legend{ display:flex; gap:16px; font-size:12px; color:var(--ink-dim); margin-top:10px; }
+  .legend-dot{ width:9px; height:9px; border-radius:2px; display:inline-block; margin-right:5px; vertical-align:middle; }
+
+  .rank-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:2px; }
+  .rank-row{ display:flex; align-items:center; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border); font-size:13px; }
+  .rank-row:last-child{ border-bottom:none; }
+  .rank-name{ font-weight:700; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:60%; }
+  .rank-meta{ color:var(--ink-dim); font-size:12px; }
+  .rank-val{ font-family:'IBM Plex Mono',monospace; font-weight:600; }
+
+  .recent-item{ display:flex; align-items:center; gap:10px; padding:9px 0; border-bottom:1px solid var(--border); font-size:13px; }
+  .recent-item:last-child{ border-bottom:none; }
+  .recent-model{ font-weight:700; flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .recent-date{ color:var(--ink-faint); font-size:11px; }
+
+  textarea.notes-field{
+    width:100%; min-height:84px; resize:vertical; border:1px solid var(--border); border-radius:10px;
+    background:var(--surface-2); color:var(--ink); padding:10px 12px; font:inherit; font-size:13px;
+  }
+  .notes-save{ margin-top:8px; }
+
+  /* badges */
+  .badge{ display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:700; padding:3px 9px; border-radius:99px; white-space:nowrap; }
+  .badge.stock{ background:var(--accent-soft); color:var(--accent); }
+  .badge.sold{ background:var(--success-soft); color:var(--success); }
+  .badge.lent{ background:var(--gold-soft); color:var(--gold); }
+  .badge.lost{ background:var(--slate-soft); color:var(--slate); }
+
+  /* buttons */
+  .btn{
+    appearance:none; border:1px solid var(--border); background:var(--surface); color:var(--ink);
+    font-weight:700; font-size:13px; padding:9px 14px; border-radius:10px; cursor:pointer;
+    display:inline-flex; align-items:center; gap:6px; white-space:nowrap;
+  }
+  .btn:hover{ border-color:var(--ink-faint); }
+  .btn.primary{ background:var(--accent); border-color:var(--accent); color:var(--accent-ink); }
+  .btn.primary:hover{ opacity:.92; }
+  .btn.danger{ background:var(--danger); border-color:var(--danger); color:#fff; }
+  .btn.ghost{ background:transparent; border-color:transparent; }
+  .btn.sm{ padding:6px 10px; font-size:12px; border-radius:8px; }
+  .btn:disabled{ opacity:.5; cursor:not-allowed; }
+
+  /* toolbar */
+  .toolbar{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:16px; }
+  .search-box{ position:relative; flex:1; min-width:200px; }
+  .search-box input{
+    width:100%; padding:10px 12px 10px 34px; border-radius:10px; border:1px solid var(--border);
+    background:var(--surface); color:var(--ink); font:inherit; font-size:13px;
+  }
+  .search-box svg{ position:absolute; left:11px; top:50%; transform:translateY(-50%); opacity:.5; }
+  .chip-row{ display:flex; gap:6px; flex-wrap:wrap; }
+  .chip{
+    border:1px solid var(--border); background:var(--surface); color:var(--ink-dim); font-weight:700; font-size:12px;
+    padding:7px 12px; border-radius:99px; cursor:pointer;
+  }
+  .chip.active{ background:var(--ink); color:var(--bg); border-color:var(--ink); }
+  :root[data-theme="dark"] .chip.active, @media (prefers-color-scheme:dark){ }
+  .spacer{ flex:1; }
+  .export-wrap{ position:relative; }
+  .export-menu{
+    position:absolute; right:0; top:calc(100% + 6px); background:var(--surface); border:1px solid var(--border);
+    border-radius:10px; box-shadow:var(--shadow); min-width:190px; padding:6px; z-index:30; display:none;
+  }
+  .export-menu.open{ display:block; }
+  .export-menu button{
+    width:100%; text-align:left; background:transparent; border:none; padding:9px 10px; border-radius:7px;
+    font-size:13px; font-weight:600; color:var(--ink); cursor:pointer; display:flex; align-items:center; gap:8px;
+  }
+  .export-menu button:hover{ background:var(--surface-2); }
+
+  /* table */
+  .table-wrap{ background:var(--surface); border:1px solid var(--border); border-radius:14px; overflow:hidden; box-shadow:var(--shadow); }
+  table{ width:100%; border-collapse:collapse; font-size:13px; }
+  thead th{
+    text-align:left; font-size:11px; text-transform:uppercase; letter-spacing:.03em; color:var(--ink-dim);
+    padding:12px 14px; border-bottom:1px solid var(--border); cursor:pointer; user-select:none; white-space:nowrap;
+    background:var(--surface-2);
+  }
+  thead th:hover{ color:var(--ink); }
+  thead th .arrow{ opacity:.5; font-size:10px; margin-left:3px; }
+  tbody td{ padding:12px 14px; border-bottom:1px solid var(--border); vertical-align:top; }
+  tbody tr:last-child td{ border-bottom:none; }
+  tbody tr:hover{ background:var(--surface-2); }
+  .cell-model{ font-weight:700; max-width:220px; }
+  .cell-sub{ color:var(--ink-faint); font-size:11.5px; margin-top:2px; }
+  .profit-pos{ color:var(--success); font-weight:700; }
+  .profit-neg{ color:var(--danger); font-weight:700; }
+  .profit-zero{ color:var(--ink-faint); }
+  .row-actions{ display:flex; gap:6px; }
+  .table-scroll{ overflow-x:auto; }
+
+  .mlabel{ display:none; }
+  @media (max-width:760px){
+    .table-wrap table thead{ display:none; }
+    .table-wrap table, .table-wrap tbody, .table-wrap tr, .table-wrap td{ display:block; width:100%; }
+    .table-wrap tr{ padding:14px; border-bottom:1px solid var(--border); }
+    .table-wrap td{ border:none; padding:4px 0; }
+    .table-wrap td[data-row]{ display:flex; align-items:baseline; gap:8px; }
+    .mlabel{ display:inline-block; flex:none; width:92px; color:var(--ink-faint); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.02em; }
+    .card-top{ display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:6px; }
+  }
+
+  .pager{ display:flex; align-items:center; justify-content:center; gap:10px; padding:16px 0 4px; font-size:13px; color:var(--ink-dim); }
+
+  /* modal */
+  .overlay{
+    position:fixed; inset:0; background:rgba(20,18,14,.45); display:none; align-items:flex-start; justify-content:center;
+    padding:5vh 16px; z-index:100; overflow-y:auto;
+  }
+  .overlay.open{ display:flex; }
+  .modal{
+    background:var(--surface); border-radius:16px; border:1px solid var(--border); width:100%; max-width:560px;
+    padding:22px; box-shadow:var(--shadow); margin-bottom:5vh;
+  }
+  .modal h2{ font-size:18px; margin-bottom:4px; }
+  .modal .modal-sub{ font-size:12.5px; color:var(--ink-dim); margin-bottom:18px; }
+  .form-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .form-grid .full{ grid-column:1/-1; }
+  @media (max-width:480px){ .form-grid{ grid-template-columns:1fr; } }
+  .field label{ display:block; font-size:11.5px; font-weight:700; color:var(--ink-dim); margin-bottom:5px; text-transform:uppercase; letter-spacing:.02em; }
+  .field input, .field select, .field textarea{
+    width:100%; padding:9px 11px; border-radius:9px; border:1px solid var(--border); background:var(--surface-2);
+    color:var(--ink); font:inherit; font-size:13.5px;
+  }
+  .field textarea{ min-height:56px; resize:vertical; }
+  .form-actions{ display:flex; justify-content:flex-end; gap:8px; margin-top:20px; }
+  .modal.small{ max-width:400px; }
+  .modal-close{ float:right; background:none; border:none; color:var(--ink-faint); font-size:20px; cursor:pointer; line-height:1; }
+
+  /* toasts */
+  #toasts{ position:fixed; bottom:calc(18px + env(safe-area-inset-bottom,0px)); left:50%; transform:translateX(-50%); z-index:200; display:flex; flex-direction:column; gap:8px; align-items:center; }
+  .toast{
+    background:var(--ink); color:var(--bg); padding:10px 16px; border-radius:10px; font-size:13px; font-weight:600;
+    box-shadow:var(--shadow); opacity:0; transform:translateY(6px); transition:opacity .2s, transform .2s;
+  }
+  .toast.show{ opacity:1; transform:translateY(0); }
+  .toast.err{ background:var(--danger); color:#fff; }
+
+  .empty-state{ text-align:center; padding:50px 20px; color:var(--ink-dim); }
+  .empty-state svg{ opacity:.35; margin-bottom:10px; }
+
+  [hidden]{ display:none!important; }
+</style>
+
+<header class="top">
+  <div class="top-inner">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <rect x="6" y="2" width="12" height="20" rx="2.5" stroke="white" stroke-width="1.8"/>
+          <circle cx="12" cy="18" r="1" fill="white"/>
+        </svg>
+      </div>
+      <div>
+        <div class="brand-name">Ombor</div>
+        <div class="brand-sub">iPhone savdo boshqaruvi</div>
+      </div>
+    </div>
+    <div class="status-wrap"><span class="status-dot" id="statusDot"></span><span id="statusText">Ulanmoqda…</span></div>
+  </div>
+  <nav class="tabs top-inner" id="tabNav">
+    <button class="tab-btn active" data-tab="dashboard">Boshqaruv paneli</button>
+    <button class="tab-btn" data-tab="phones">Telefonlar</button>
+  </nav>
+</header>
+
+<main class="shell">
+
+  <section id="tab-dashboard" class="active">
+    <div class="kpi-grid" id="kpiGrid"></div>
+    <div class="panel-grid">
+      <div>
+        <div class="card">
+          <h3>Oylar bo'yicha <span class="hint">sotib olingan sana bo'yicha</span></h3>
+          <div class="chart" id="chartBox"></div>
+          <div class="chart-legend">
+            <span><span class="legend-dot" style="background:var(--accent)"></span>Soni (dona)</span>
+            <span><span class="legend-dot" style="background:var(--gold)"></span>Foyda ($)</span>
+          </div>
+        </div>
+        <div class="card">
+          <h3>So'nggi qo'shilganlar</h3>
+          <div id="recentList"></div>
+        </div>
+      </div>
+      <div>
+        <div class="card">
+          <h3>Ko'p sotib olingan manbalar</h3>
+          <ul class="rank-list" id="topSources"></ul>
+        </div>
+        <div class="card">
+          <h3>Ko'p sotib olgan xaridorlar</h3>
+          <ul class="rank-list" id="topBuyers"></ul>
+        </div>
+        <div class="card">
+          <h3>Eslatmalar</h3>
+          <textarea class="notes-field" id="notesField" placeholder="Muhim eslatmalar, yo'qolgan/o'g'irlangan telefonlar va h.k."></textarea>
+          <button class="btn primary sm notes-save" id="saveNotesBtn">Saqlash</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="tab-phones">
+    <div class="toolbar">
+      <div class="search-box">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <input type="text" id="searchInput" placeholder="Model, IMEI, ism yoki telefon bo'yicha qidirish…">
+      </div>
+      <div class="chip-row" id="statusChips">
+        <button class="chip active" data-status="all">Hammasi</button>
+        <button class="chip" data-status="stock">Omborda</button>
+        <button class="chip" data-status="sold">Sotilgan</button>
+        <button class="chip" data-status="lent">Band</button>
+        <button class="chip" data-status="lost">Yo'qolgan</button>
+      </div>
+      <div class="spacer"></div>
+      <div class="export-wrap">
+        <button class="btn" id="exportBtn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 21h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Eksport
+        </button>
+        <div class="export-menu" id="exportMenu">
+          <button id="exportCsv">CSV (.csv)</button>
+          <button id="exportXlsx">Excel (.xlsx)</button>
+        </div>
+      </div>
+      <button class="btn primary" id="addPhoneBtn">+ Yangi telefon</button>
+    </div>
+
+    <div class="table-wrap">
+      <div class="table-scroll">
+        <table id="phoneTable">
+          <thead>
+            <tr>
+              <th data-sort="model">Model</th>
+              <th data-sort="imei">IMEI</th>
+              <th data-sort="status">Holati</th>
+              <th data-sort="buyDate">Sotib olindi</th>
+              <th data-sort="sellDate">Sotildi</th>
+              <th data-sort="profit">Foyda</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="phoneTbody"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="pager" id="pager"></div>
+  </section>
+
+</main>
+
+<div class="overlay" id="phoneOverlay">
+  <div class="modal">
+    <button class="modal-close" id="closePhoneModal">&times;</button>
+    <h2 id="modalTitle">Yangi telefon</h2>
+    <div class="modal-sub">Barcha maydonlar ixtiyoriy, faqat model kiritish tavsiya etiladi.</div>
+    <form id="phoneForm">
+      <div class="form-grid">
+        <div class="field full"><label>Model / tavsif</label><input type="text" id="f_model" placeholder="13 PRO BLUE 128GB 86% LL/A"></div>
+        <div class="field full"><label>IMEI</label><input type="text" id="f_imei" placeholder="35-xx-xx-xx-xx-xxxxx" class="mono"></div>
+        <div class="field"><label>Holati</label>
+          <select id="f_status">
+            <option value="stock">Omborda</option>
+            <option value="sold">Sotilgan</option>
+            <option value="lent">Band / berilgan</option>
+            <option value="lost">Yo'qolgan</option>
+          </select>
+        </div>
+        <div class="field"><label>Quti / karobka</label>
+          <select id="f_imeiBox"><option value="0">Yo'q</option><option value="1">Bor</option></select>
+        </div>
+        <div class="field"><label>Kimdan olindi</label><input type="text" id="f_source"></div>
+        <div class="field"><label>Uning telefoni</label><input type="text" id="f_sourcePhone"></div>
+        <div class="field"><label>Sotib olingan sana</label><input type="date" id="f_buyDate"></div>
+        <div class="field"><label>Sotib olingan narx ($)</label><input type="number" step="1" id="f_buyPrice" class="mono"></div>
+        <div class="field"><label>Kimga sotildi</label><input type="text" id="f_buyer"></div>
+        <div class="field"><label>Uning telefoni</label><input type="text" id="f_buyerPhone"></div>
+        <div class="field"><label>Sotilgan sana</label><input type="date" id="f_sellDate"></div>
+        <div class="field"><label>Sotilgan narx ($)</label><input type="number" step="1" id="f_sellPrice" class="mono"></div>
+        <div class="field full"><label>Izoh</label><textarea id="f_note" placeholder="Kredit, holat, boshqa eslatmalar…"></textarea></div>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn" id="cancelPhoneBtn">Bekor qilish</button>
+        <button type="submit" class="btn primary" id="savePhoneBtn">Saqlash</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="overlay" id="confirmOverlay">
+  <div class="modal small">
+    <h2>O'chirishni tasdiqlang</h2>
+    <div class="modal-sub" id="confirmText">Ushbu telefon yozuvini o'chirmoqchimisiz? Bu amalni qaytarib bo'lmaydi.</div>
+    <div class="form-actions">
+      <button class="btn" id="confirmCancel">Bekor qilish</button>
+      <button class="btn danger" id="confirmOk">O'chirish</button>
+    </div>
+  </div>
+</div>
+
+<div id="toasts"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+(function(){
+  "use strict";
+
+  var state = {
+    phones: [],
+    notes: "",
+    tab: "dashboard",
+    search: "",
+    status: "all",
+    sortKey: "seq",
+    sortDir: "desc",
+    page: 1,
+    pageSize: 20,
+    editingId: null,
+    deleteId: null,
+    dbReady: false
+  };
+
+  var db = null, downloadsCap = null, phonesCol = null, notesDoc = null;
+
+  function esc(s){
+    s = (s===null||s===undefined) ? "" : String(s);
+    return s.replace(/[&<>"']/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+    });
+  }
+  function fmtMoney(n){
+    if(n===null || n===undefined || isNaN(n)) return "—";
+    var neg = n<0; n = Math.round(Math.abs(n));
+    var s = n.toLocaleString("en-US");
+    return (neg?"-":"")+"$"+s;
+  }
+  var MONTHS = ["Yan","Fev","Mar","Apr","May","Iyun","Iyul","Avg","Sen","Okt","Noy","Dek"];
+  function fmtDate(iso){
+    if(!iso) return "—";
+    var p = iso.split("-");
+    if(p.length!==3) return iso;
+    var m = parseInt(p[1],10)-1;
+    return parseInt(p[2],10)+" "+(MONTHS[m]||p[1])+" "+p[0];
+  }
+  function monthKey(iso){
+    if(!iso) return null;
+    var p = iso.split("-");
+    if(p.length<2) return null;
+    return p[0]+"-"+p[1];
+  }
+  function profitOf(p){
+    if(p.sellPrice==null || p.buyPrice==null) return null;
+    return p.sellPrice - p.buyPrice;
+  }
+  function statusLabel(s){
+    return {stock:"Omborda", sold:"Sotilgan", lent:"Band", lost:"Yo'qolgan"}[s] || s;
+  }
+  function toast(msg, isErr){
+    var el = document.createElement("div");
+    el.className = "toast" + (isErr ? " err" : "");
+    el.textContent = msg;
+    document.getElementById("toasts").appendChild(el);
+    requestAnimationFrame(function(){ el.classList.add("show"); });
+    setTimeout(function(){
+      el.classList.remove("show");
+      setTimeout(function(){ el.remove(); }, 250);
+    }, 2800);
+  }
+
+  /* ---------- capability init ---------- */
+  function setStatus(mode){
+    var dot = document.getElementById("statusDot"), txt = document.getElementById("statusText");
+    if(mode==="live"){ dot.className="status-dot live"; txt.textContent="Ulandi"; }
+    else if(mode==="off"){ dot.className="status-dot off"; txt.textContent="Bazaga ulanib bo'lmadi"; }
+    else { dot.className="status-dot"; txt.textContent="Ulanmoqda…"; }
+  }
+
+  async function init(){
+    if(!window.claude || !window.claude.use){ setStatus("off"); renderAll(); return; }
+    try{
+      db = await window.claude.use("db");
+    }catch(e){ db = null; }
+    try{
+      downloadsCap = await window.claude.use("downloads");
+    }catch(e){ downloadsCap = null; }
+
+    if(!db){ setStatus("off"); renderAll(); return; }
+    setStatus("live");
+    phonesCol = db.collection("phones");
+    notesDoc = db.doc("meta/notes");
+
+    phonesCol.orderBy("seq","desc").limit(1000).onSnapshot(function(snap){
+      state.phones = snap.docs.map(function(d){ var v=Object.assign({}, d.data()||{}); v.id=d.id; return v; });
+      state.dbReady = true;
+      renderAll();
+    }, function(err){
+      setStatus("off");
+      toast("Ma'lumotlarni o'qishda xatolik: "+err.code, true);
+    });
+
+    notesDoc.onSnapshot(function(snap){
+      var d = snap.data();
+      state.notes = (d && d.text) || "";
+      var field = document.getElementById("notesField");
+      if(document.activeElement !== field) field.value = state.notes;
+    });
+  }
+
+  /* ---------- filtering / sorting ---------- */
+  function filteredPhones(){
+    var list = state.phones.slice();
+    if(state.status!=="all") list = list.filter(function(p){ return p.status===state.status; });
+    if(state.search){
+      var q = state.search.toLowerCase();
+      list = list.filter(function(p){
+        return [p.model,p.imei,p.source,p.sourcePhone,p.buyer,p.buyerPhone,p.note].some(function(f){
+          return f && String(f).toLowerCase().indexOf(q)!==-1;
+        });
+      });
+    }
+    var key = state.sortKey, dir = state.sortDir==="asc"?1:-1;
+    list.sort(function(a,b){
+      var av, bv;
+      if(key==="profit"){ av=profitOf(a); bv=profitOf(b); }
+      else { av=a[key]; bv=b[key]; }
+      if(av==null && bv==null) return 0;
+      if(av==null) return 1;
+      if(bv==null) return -1;
+      if(typeof av==="string") return av.localeCompare(bv)*dir;
+      return (av-bv)*dir;
+    });
+    return list;
+  }
+
+  /* ---------- render: dashboard ---------- */
+  function renderDashboard(){
+    var all = state.phones;
+    var sold = all.filter(function(p){return p.status==="sold";});
+    var stock = all.filter(function(p){return p.status==="stock";});
+    var lent = all.filter(function(p){return p.status==="lent";});
+    var lost = all.filter(function(p){return p.status==="lost";});
+
+    var totalProfit = sold.reduce(function(s,p){ var pr=profitOf(p); return s+(pr||0); },0);
+    var totalRevenue = sold.reduce(function(s,p){ return s+(p.sellPrice||0); },0);
+    var capitalInStock = stock.reduce(function(s,p){ return s+(p.buyPrice||0); },0);
+    var costBasisSold = sold.reduce(function(s,p){ return s+(p.buyPrice||0); },0);
+    var margin = costBasisSold>0 ? (totalProfit/costBasisSold*100) : 0;
+    var lostValue = lost.reduce(function(s,p){ return s+(p.buyPrice||0); },0);
+
+    var kpis = [
+      {label:"Jami foyda", value:fmtMoney(totalProfit), cls:totalProfit>=0?"success":"danger", sub:sold.length+" ta sotilgan telefondan"},
+      {label:"Jami aylanma", value:fmtMoney(totalRevenue), cls:"", sub:"Sotilganlar bo'yicha tushum"},
+      {label:"O'rtacha marja", value:margin.toFixed(1)+"%", cls:"gold", sub:"Foyda / tannarx nisbati"},
+      {label:"Omborda", value:stock.length+" dona", cls:"", sub:fmtMoney(capitalInStock)+" band qilingan"},
+      {label:"Band / berilgan", value:lent.length+" dona", cls:"", sub:"Narxsiz yoki vaqtinchalik"},
+      {label:"Yo'qolgan", value:lost.length+" dona", cls:lost.length?"danger":"", sub:lostValue?fmtMoney(lostValue)+" zarar":"Hozircha yo'q"}
+    ];
+    document.getElementById("kpiGrid").innerHTML = kpis.map(function(k){
+      return '<div class="kpi"><div class="kpi-label">'+esc(k.label)+'</div>'+
+        '<div class="kpi-value '+k.cls+'">'+esc(k.value)+'</div>'+
+        '<div class="kpi-sub">'+esc(k.sub)+'</div></div>';
+    }).join("");
+
+    // monthly chart from buyDate
+    var byMonth = {};
+    all.forEach(function(p){
+      var mk = monthKey(p.buyDate);
+      if(!mk) return;
+      if(!byMonth[mk]) byMonth[mk] = {count:0, profit:0};
+      byMonth[mk].count++;
+      var pr = profitOf(p);
+      if(pr!=null) byMonth[mk].profit += pr;
+    });
+    var months = Object.keys(byMonth).sort().slice(-6);
+    var maxCount = Math.max.apply(null, months.map(function(m){return byMonth[m].count;}).concat([1]));
+    var maxProfit = Math.max.apply(null, months.map(function(m){return Math.abs(byMonth[m].profit);}).concat([1]));
+    document.getElementById("chartBox").innerHTML = months.length ? months.map(function(m){
+      var d = byMonth[m];
+      var hC = Math.max(3, Math.round(d.count/maxCount*100));
+      var hP = Math.max(3, Math.round(Math.abs(d.profit)/maxProfit*100));
+      var p = m.split("-");
+      var label = (MONTHS[parseInt(p[1],10)-1]||p[1])+" "+p[0].slice(2);
+      return '<div class="col"><div class="bar-wrap">'+
+        '<div class="bar" style="height:'+hC+'px" title="'+d.count+' dona"></div>'+
+        '<div class="bar profit" style="height:'+hP+'px" title="'+fmtMoney(d.profit)+'"></div>'+
+        '</div><div class="col-label">'+esc(label)+'</div></div>';
+    }).join("") : '<div class="empty-state" style="padding:20px">Ma\'lumot yo\'q</div>';
+
+    // recent
+    var recent = all.slice().sort(function(a,b){ return (b.seq||0)-(a.seq||0); }).slice(0,6);
+    document.getElementById("recentList").innerHTML = recent.length ? recent.map(function(p){
+      return '<div class="recent-item"><span class="badge '+p.status+'">'+statusLabel(p.status)+'</span>'+
+        '<span class="recent-model">'+esc(p.model||"Nomsiz")+'</span>'+
+        '<span class="recent-date">'+esc(fmtDate(p.buyDate))+'</span></div>';
+    }).join("") : '<div class="empty-state">Hali telefon qo\'shilmagan</div>';
+
+    // top sources
+    var srcMap = {};
+    all.forEach(function(p){
+      if(!p.source) return;
+      var k = p.source.trim();
+      if(!srcMap[k]) srcMap[k] = {count:0, sum:0};
+      srcMap[k].count++; srcMap[k].sum += (p.buyPrice||0);
+    });
+    var topSrc = Object.keys(srcMap).map(function(k){ return {name:k, c:srcMap[k].count, s:srcMap[k].sum}; })
+      .sort(function(a,b){return b.c-a.c;}).slice(0,5);
+    document.getElementById("topSources").innerHTML = topSrc.length ? topSrc.map(function(r){
+      return '<li class="rank-row"><span class="rank-name">'+esc(r.name)+'</span>'+
+        '<span><span class="rank-meta">'+r.c+' dona · </span><span class="rank-val mono">'+fmtMoney(r.s)+'</span></span></li>';
+    }).join("") : '<li class="rank-row"><span class="rank-meta">Ma\'lumot yo\'q</span></li>';
+
+    // top buyers
+    var buyMap = {};
+    sold.forEach(function(p){
+      if(!p.buyer) return;
+      var k = p.buyer.trim();
+      if(!buyMap[k]) buyMap[k] = {count:0, sum:0};
+      buyMap[k].count++; buyMap[k].sum += (p.sellPrice||0);
+    });
+    var topBuy = Object.keys(buyMap).map(function(k){ return {name:k, c:buyMap[k].count, s:buyMap[k].sum}; })
+      .sort(function(a,b){return b.c-a.c;}).slice(0,5);
+    document.getElementById("topBuyers").innerHTML = topBuy.length ? topBuy.map(function(r){
+      return '<li class="rank-row"><span class="rank-name">'+esc(r.name)+'</span>'+
+        '<span><span class="rank-meta">'+r.c+' dona · </span><span class="rank-val mono">'+fmtMoney(r.s)+'</span></span></li>';
+    }).join("") : '<li class="rank-row"><span class="rank-meta">Ma\'lumot yo\'q</span></li>';
+  }
+
+  /* ---------- render: phones table ---------- */
+  function renderPhones(){
+    var list = filteredPhones();
+    var totalPages = Math.max(1, Math.ceil(list.length/state.pageSize));
+    if(state.page>totalPages) state.page = totalPages;
+    var startIdx = (state.page-1)*state.pageSize;
+    var pageItems = list.slice(startIdx, startIdx+state.pageSize);
+
+    var tbody = document.getElementById("phoneTbody");
+    if(!pageItems.length){
+      tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state">Hech narsa topilmadi</div></td></tr>';
+    } else {
+      tbody.innerHTML = pageItems.map(function(p){
+        var pr = profitOf(p);
+        var prCls = pr==null ? "" : (pr>0?"profit-pos":(pr<0?"profit-neg":"profit-zero"));
+        var prText = pr==null ? "—" : fmtMoney(pr);
+        return '<tr>'+
+          '<td>'+
+            '<div class="card-top">'+
+              '<div><div class="cell-model">'+esc(p.model||"Nomsiz")+'</div>'+
+              '<div class="cell-sub">'+esc(p.source||"")+'</div></div>'+
+              '<span class="badge '+p.status+'" style="display:none" data-badge></span>'+
+            '</div>'+
+          '</td>'+
+          '<td data-row><span class="mlabel">IMEI</span><span class="mono">'+esc(p.imei||"—")+'</span></td>'+
+          '<td data-row><span class="mlabel">Holati</span><span class="badge '+p.status+'">'+statusLabel(p.status)+'</span></td>'+
+          '<td data-row><span class="mlabel">Sotib olindi</span><span>'+esc(fmtDate(p.buyDate))+(p.buyPrice!=null?' · <span class="mono">'+fmtMoney(p.buyPrice)+'</span>':'')+'</span></td>'+
+          '<td data-row><span class="mlabel">Sotildi</span><span>'+esc(fmtDate(p.sellDate))+(p.buyer?' · '+esc(p.buyer):'')+'</span></td>'+
+          '<td data-row><span class="mlabel">Foyda</span><span class="'+prCls+' mono">'+prText+'</span></td>'+
+          '<td><div class="row-actions">'+
+            '<button class="btn sm ghost" data-edit="'+p.id+'">Tahrir</button>'+
+            '<button class="btn sm ghost" data-del="'+p.id+'" style="color:var(--danger)">O\'chirish</button>'+
+          '</div></td>'+
+        '</tr>';
+      }).join("");
+    }
+
+    var pager = document.getElementById("pager");
+    if(list.length>state.pageSize){
+      pager.innerHTML = '<button class="btn sm" id="prevPage" '+(state.page<=1?"disabled":"")+'>&larr; Oldingi</button>'+
+        '<span>'+state.page+' / '+totalPages+' ('+list.length+' ta)</span>'+
+        '<button class="btn sm" id="nextPage" '+(state.page>=totalPages?"disabled":"")+'>Keyingi &rarr;</button>';
+      var prevBtn = document.getElementById("prevPage"), nextBtn = document.getElementById("nextPage");
+      if(prevBtn) prevBtn.onclick = function(){ state.page--; renderPhones(); };
+      if(nextBtn) nextBtn.onclick = function(){ state.page++; renderPhones(); };
+    } else {
+      pager.innerHTML = list.length ? ('<span>Jami: '+list.length+' ta</span>') : "";
+    }
+
+    // header sort arrows
+    document.querySelectorAll("#phoneTable thead th[data-sort]").forEach(function(th){
+      var key = th.getAttribute("data-sort");
+      var base = th.textContent.replace(/\s*[▲▼]$/,"");
+      th.innerHTML = th.textContent.replace(/\s*[▲▼]$/,"") + (state.sortKey===key ? ' <span class="arrow">'+(state.sortDir==="asc"?"▲":"▼")+'</span>' : "");
+    });
+
+    bindRowActions();
+  }
+
+  function bindRowActions(){
+    document.querySelectorAll("[data-edit]").forEach(function(btn){
+      btn.onclick = function(){ openPhoneModal(btn.getAttribute("data-edit")); };
+    });
+    document.querySelectorAll("[data-del]").forEach(function(btn){
+      btn.onclick = function(){ openConfirm(btn.getAttribute("data-del")); };
+    });
+  }
+
+  function renderAll(){
+    renderDashboard();
+    renderPhones();
+  }
+
+  /* ---------- modal: add/edit phone ---------- */
+  var FIELDS = ["model","imei","status","imeiBox","source","sourcePhone","buyDate","buyPrice","buyer","buyerPhone","sellDate","sellPrice","note"];
+  function openPhoneModal(id){
+    state.editingId = id || null;
+    var p = id ? state.phones.find(function(x){return x.id===id;}) : null;
+    document.getElementById("modalTitle").textContent = id ? "Telefonni tahrirlash" : "Yangi telefon";
+    document.getElementById("f_model").value = p ? (p.model||"") : "";
+    document.getElementById("f_imei").value = p ? (p.imei||"") : "";
+    document.getElementById("f_status").value = p ? (p.status||"stock") : "stock";
+    document.getElementById("f_imeiBox").value = p && p.imeiBox ? "1" : "0";
+    document.getElementById("f_source").value = p ? (p.source||"") : "";
+    document.getElementById("f_sourcePhone").value = p ? (p.sourcePhone||"") : "";
+    document.getElementById("f_buyDate").value = p ? (p.buyDate||"") : "";
+    document.getElementById("f_buyPrice").value = p && p.buyPrice!=null ? p.buyPrice : "";
+    document.getElementById("f_buyer").value = p ? (p.buyer||"") : "";
+    document.getElementById("f_buyerPhone").value = p ? (p.buyerPhone||"") : "";
+    document.getElementById("f_sellDate").value = p ? (p.sellDate||"") : "";
+    document.getElementById("f_sellPrice").value = p && p.sellPrice!=null ? p.sellPrice : "";
+    document.getElementById("f_note").value = p ? (p.note||"") : "";
+    document.getElementById("phoneOverlay").classList.add("open");
+    document.getElementById("f_model").focus();
+  }
+  function closePhoneModal(){
+    document.getElementById("phoneOverlay").classList.remove("open");
+    state.editingId = null;
+  }
+
+  async function savePhone(ev){
+    ev.preventDefault();
+    if(!phonesCol){ toast("Baza mavjud emas", true); return; }
+    var num = function(v){ v = v.trim(); if(v==="") return null; var n = Number(v); return isNaN(n)?null:n; };
+    var data = {
+      model: document.getElementById("f_model").value.trim(),
+      imei: document.getElementById("f_imei").value.trim(),
+      status: document.getElementById("f_status").value,
+      imeiBox: document.getElementById("f_imeiBox").value === "1",
+      source: document.getElementById("f_source").value.trim(),
+      sourcePhone: document.getElementById("f_sourcePhone").value.trim(),
+      buyDate: document.getElementById("f_buyDate").value,
+      buyPrice: num(document.getElementById("f_buyPrice").value),
+      buyer: document.getElementById("f_buyer").value.trim(),
+      buyerPhone: document.getElementById("f_buyerPhone").value.trim(),
+      sellDate: document.getElementById("f_sellDate").value,
+      sellPrice: num(document.getElementById("f_sellPrice").value),
+      note: document.getElementById("f_note").value.trim(),
+      updatedAt: new Date().toISOString()
+    };
+    var saveBtn = document.getElementById("savePhoneBtn");
+    saveBtn.disabled = true; saveBtn.textContent = "Saqlanmoqda…";
+    try{
+      if(state.editingId){
+        await phonesCol.doc(state.editingId).update(data);
+        toast("O'zgarishlar saqlandi");
+      } else {
+        data.seq = Date.now();
+        data.createdAt = data.updatedAt;
+        await phonesCol.add(data);
+        toast("Telefon qo'shildi");
+      }
+      closePhoneModal();
+    }catch(e){
+      toast("Saqlashda xatolik: "+(e.code||e.message||"noma'lum"), true);
+    }
+    saveBtn.disabled = false; saveBtn.textContent = "Saqlash";
+  }
+
+  /* ---------- delete confirm ---------- */
+  function openConfirm(id){
+    state.deleteId = id;
+    var p = state.phones.find(function(x){return x.id===id;});
+    document.getElementById("confirmText").textContent = "\""+((p&&p.model)||"Ushbu yozuv")+"\" o'chiriladi. Bu amalni qaytarib bo'lmaydi.";
+    document.getElementById("confirmOverlay").classList.add("open");
+  }
+  function closeConfirm(){
+    document.getElementById("confirmOverlay").classList.remove("open");
+    state.deleteId = null;
+  }
+  async function doDelete(){
+    if(!state.deleteId || !phonesCol) return;
+    try{
+      await phonesCol.doc(state.deleteId).delete();
+      toast("O'chirildi");
+    }catch(e){
+      toast("O'chirishda xatolik", true);
+    }
+    closeConfirm();
+  }
+
+  /* ---------- export ---------- */
+  function exportRows(){
+    var list = filteredPhones();
+    var header = ["Model","IMEI","Holati","Kimdan olindi","Tel(sotuvchi)","Sotib olingan sana","Sotib olingan narx",
+      "Kimga sotildi","Tel(xaridor)","Sotilgan sana","Sotilgan narx","Foyda","Izoh"];
+    var rows = list.map(function(p){
+      var pr = profitOf(p);
+      return [p.model||"", p.imei||"", statusLabel(p.status), p.source||"", p.sourcePhone||"",
+        p.buyDate||"", p.buyPrice!=null?p.buyPrice:"", p.buyer||"", p.buyerPhone||"",
+        p.sellDate||"", p.sellPrice!=null?p.sellPrice:"", pr!=null?pr:"", p.note||""];
+    });
+    return {header:header, rows:rows};
+  }
+  async function doExportCsv(){
+    var d = exportRows();
+    var lines = [d.header].concat(d.rows).map(function(row){
+      return row.map(function(v){
+        var s = String(v);
+        if(/[",\n]/.test(s)) s = '"'+s.replace(/"/g,'""')+'"';
+        return s;
+      }).join(",");
+    });
+    var csv = "﻿" + lines.join("\r\n");
+    if(!downloadsCap){ toast("Yuklab olish mavjud emas", true); return; }
+    try{
+      await downloadsCap.save({filename:"telefonlar.csv", data:new Blob([csv],{type:"text/csv"})});
+      toast("CSV fayl saqlandi");
+    }catch(e){
+      if(e && e.code!=="declined") toast("Eksportda xatolik", true);
+    }
+  }
+  async function doExportXlsx(){
+    if(!window.XLSX){ toast("Excel kutubxonasi yuklanmadi", true); return; }
+    var d = exportRows();
+    var ws = XLSX.utils.aoa_to_sheet([d.header].concat(d.rows));
+    ws["!cols"] = d.header.map(function(){ return {wch:16}; });
+    var wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Telefonlar");
+    var out = XLSX.write(wb, {bookType:"xlsx", type:"array"});
+    if(!downloadsCap){ toast("Yuklab olish mavjud emas", true); return; }
+    try{
+      await downloadsCap.save({filename:"telefonlar.xlsx", data:new Blob([out])});
+      toast("Excel fayl saqlandi");
+    }catch(e){
+      if(e && e.code!=="declined") toast("Eksportda xatolik", true);
+    }
+  }
+
+  /* ---------- notes ---------- */
+  async function saveNotes(){
+    if(!notesDoc){ toast("Baza mavjud emas", true); return; }
+    var text = document.getElementById("notesField").value;
+    var btn = document.getElementById("saveNotesBtn");
+    btn.disabled = true;
+    try{
+      await notesDoc.set({text:text, updatedAt:new Date().toISOString()});
+      toast("Eslatma saqlandi");
+    }catch(e){
+      toast("Saqlashda xatolik", true);
+    }
+    btn.disabled = false;
+  }
+
+  /* ---------- events ---------- */
+  document.getElementById("tabNav").addEventListener("click", function(e){
+    var btn = e.target.closest(".tab-btn");
+    if(!btn) return;
+    document.querySelectorAll(".tab-btn").forEach(function(b){ b.classList.remove("active"); });
+    btn.classList.add("active");
+    var tab = btn.getAttribute("data-tab");
+    document.getElementById("tab-dashboard").classList.toggle("active", tab==="dashboard");
+    document.getElementById("tab-phones").classList.toggle("active", tab==="phones");
+  });
+
+  document.getElementById("searchInput").addEventListener("input", function(e){
+    state.search = e.target.value; state.page = 1; renderPhones();
+  });
+  document.getElementById("statusChips").addEventListener("click", function(e){
+    var chip = e.target.closest(".chip");
+    if(!chip) return;
+    document.querySelectorAll(".chip").forEach(function(c){ c.classList.remove("active"); });
+    chip.classList.add("active");
+    state.status = chip.getAttribute("data-status");
+    state.page = 1;
+    renderPhones();
+  });
+  document.querySelector("#phoneTable thead").addEventListener("click", function(e){
+    var th = e.target.closest("th[data-sort]");
+    if(!th) return;
+    var key = th.getAttribute("data-sort");
+    if(state.sortKey===key) state.sortDir = state.sortDir==="asc"?"desc":"asc";
+    else { state.sortKey = key; state.sortDir = "asc"; }
+    renderPhones();
+  });
+
+  document.getElementById("addPhoneBtn").addEventListener("click", function(){ openPhoneModal(null); });
+  document.getElementById("closePhoneModal").addEventListener("click", closePhoneModal);
+  document.getElementById("cancelPhoneBtn").addEventListener("click", closePhoneModal);
+  document.getElementById("phoneOverlay").addEventListener("click", function(e){ if(e.target.id==="phoneOverlay") closePhoneModal(); });
+  document.getElementById("phoneForm").addEventListener("submit", savePhone);
+
+  document.getElementById("confirmCancel").addEventListener("click", closeConfirm);
+  document.getElementById("confirmOk").addEventListener("click", doDelete);
+  document.getElementById("confirmOverlay").addEventListener("click", function(e){ if(e.target.id==="confirmOverlay") closeConfirm(); });
+
+  document.getElementById("exportBtn").addEventListener("click", function(e){
+    e.stopPropagation();
+    document.getElementById("exportMenu").classList.toggle("open");
+  });
+  document.addEventListener("click", function(){ document.getElementById("exportMenu").classList.remove("open"); });
+  document.getElementById("exportCsv").addEventListener("click", function(e){ e.stopPropagation(); doExportCsv(); document.getElementById("exportMenu").classList.remove("open"); });
+  document.getElementById("exportXlsx").addEventListener("click", function(e){ e.stopPropagation(); doExportXlsx(); document.getElementById("exportMenu").classList.remove("open"); });
+
+  document.getElementById("saveNotesBtn").addEventListener("click", saveNotes);
+
+  document.addEventListener("keydown", function(e){
+    if(e.key==="Escape"){ closePhoneModal(); closeConfirm(); }
+  });
+
+  init();
+  renderAll();
+})();
+</script>
