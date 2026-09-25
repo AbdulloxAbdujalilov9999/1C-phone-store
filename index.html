@@ -49,8 +49,8 @@
   nav.tabs::-webkit-scrollbar{ display:none; }
   .tab-btn{
     appearance:none; border:none; background:transparent; color:var(--ink-dim);
-    font-weight:700; font-size:14px; padding:10px 4px; border-bottom:2px solid transparent;
-    cursor:pointer; white-space:nowrap; margin-right:20px; display:flex; align-items:center; gap:6px;
+    font-weight:700; font-size:15.5px; padding:12px 4px; border-bottom:3px solid transparent;
+    cursor:pointer; white-space:nowrap; margin-right:22px; display:flex; align-items:center; gap:6px;
   }
   .tab-btn.active{ color:var(--ink); border-bottom-color:var(--accent); }
   .tab-btn:hover{ color:var(--ink); }
@@ -68,6 +68,11 @@
   .setup-banner b{ color:var(--gold); }
   .setup-banner code{ background:var(--surface-2); padding:1px 6px; border-radius:5px; font-family:'IBM Plex Mono',monospace; font-size:12px; }
   .setup-banner pre{ background:var(--surface-2); border-radius:8px; padding:10px 12px; overflow-x:auto; font-size:11.5px; margin:8px 0; }
+
+  .page-intro{ margin-bottom:20px; }
+  .page-intro h1{ font-size:22px; font-weight:800; margin-bottom:6px; }
+  .page-intro p{ font-size:14px; color:var(--ink-dim); line-height:1.6; max-width:640px; }
+  .page-intro b{ color:var(--ink); }
 
   .kpi-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:12px; margin-bottom:22px; }
   .kpi{
@@ -156,19 +161,20 @@
   .btn.danger{ background:var(--danger); border-color:var(--danger); color:#1a0a0a; }
   .btn.ghost{ background:transparent; border-color:transparent; }
   .btn.sm{ padding:6px 10px; font-size:12px; border-radius:8px; }
+  .btn.lg{ padding:13px 18px; font-size:14.5px; border-radius:12px; }
   .btn:disabled{ opacity:.5; cursor:not-allowed; }
 
   .toolbar{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:16px; }
   .search-box{ position:relative; flex:1; min-width:200px; }
   .search-box input{
-    width:100%; padding:10px 12px 10px 34px; border-radius:10px; border:1px solid var(--border);
-    background:var(--surface); color:var(--ink); font:inherit; font-size:13px;
+    width:100%; padding:12px 14px 12px 36px; border-radius:11px; border:1px solid var(--border);
+    background:var(--surface); color:var(--ink); font:inherit; font-size:14px;
   }
-  .search-box svg{ position:absolute; left:11px; top:50%; transform:translateY(-50%); opacity:.5; }
-  .chip-row{ display:flex; gap:6px; flex-wrap:wrap; }
+  .search-box svg{ position:absolute; left:12px; top:50%; transform:translateY(-50%); opacity:.5; }
+  .chip-row{ display:flex; gap:7px; flex-wrap:wrap; }
   .chip{
-    border:1px solid var(--border); background:var(--surface); color:var(--ink-dim); font-weight:700; font-size:12px;
-    padding:7px 12px; border-radius:99px; cursor:pointer;
+    border:1px solid var(--border); background:var(--surface); color:var(--ink-dim); font-weight:700; font-size:13px;
+    padding:9px 14px; border-radius:99px; cursor:pointer;
   }
   .chip.active{ background:var(--ink); color:var(--bg); border-color:var(--ink); }
   .spacer{ flex:1; }
@@ -232,12 +238,17 @@
   .form-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
   .form-grid .full{ grid-column:1/-1; }
   @media (max-width:480px){ .form-grid{ grid-template-columns:1fr; } }
-  .field label{ display:block; font-size:11.5px; font-weight:700; color:var(--ink-dim); margin-bottom:5px; text-transform:uppercase; letter-spacing:.02em; }
+  .field label{ display:block; font-size:12.5px; font-weight:700; color:var(--ink-dim); margin-bottom:6px; }
   .field input, .field select, .field textarea{
-    width:100%; padding:9px 11px; border-radius:9px; border:1px solid var(--border); background:var(--surface-2);
-    color:var(--ink); font:inherit; font-size:13.5px;
+    width:100%; padding:11px 12px; border-radius:9px; border:1px solid var(--border); background:var(--surface-2);
+    color:var(--ink); font:inherit; font-size:14.5px;
   }
   .field textarea{ min-height:56px; resize:vertical; }
+  .form-section-label{
+    font-size:13px; font-weight:800; color:var(--ink); margin:18px 0 10px; padding-top:14px; border-top:1px solid var(--border);
+  }
+  .form-section-label:first-of-type{ margin-top:4px; padding-top:0; border-top:none; }
+  .form-section-label span{ font-weight:600; color:var(--ink-faint); text-transform:none; }
   .form-actions{ display:flex; justify-content:flex-end; gap:8px; margin-top:20px; }
   .modal.small{ max-width:400px; }
   .modal-close{ float:right; background:none; border:none; color:var(--ink-faint); font-size:20px; cursor:pointer; line-height:1; }
@@ -289,10 +300,10 @@
     <div class="status-wrap"><span class="status-dot" id="statusDot"></span><span id="statusText">Ulanmoqda…</span></div>
   </div>
   <nav class="tabs top-inner" id="tabNav">
-    <button class="tab-btn active" data-tab="dashboard">Boshqaruv paneli</button>
-    <button class="tab-btn" data-tab="iphone">iPhone <span class="tab-count" id="count-iphone">0</span></button>
-    <button class="tab-btn" data-tab="samsung">Samsung <span class="tab-count" id="count-samsung">0</span></button>
-    <button class="tab-btn" data-tab="other">Boshqa <span class="tab-count" id="count-other">0</span></button>
+    <button class="tab-btn active" data-tab="dashboard">🏠 Bosh sahifa</button>
+    <button class="tab-btn" data-tab="iphone">📱 iPhone <span class="tab-count" id="count-iphone">0</span></button>
+    <button class="tab-btn" data-tab="samsung">📱 Samsung <span class="tab-count" id="count-samsung">0</span></button>
+    <button class="tab-btn" data-tab="other">📦 Boshqa <span class="tab-count" id="count-other">0</span></button>
   </nav>
 </header>
 
@@ -300,35 +311,39 @@
 
   <section id="tab-dashboard" class="active">
     <div id="setupBanner" class="setup-banner" hidden></div>
+    <div class="page-intro">
+      <h1>Salom! 👋</h1>
+      <p>Bu yerda barcha telefonlaringiz va ulardan tushgan foyda ko'rinadi. Yangi telefon qo'shish uchun yuqoridan <b>iPhone</b>, <b>Samsung</b> yoki <b>Boshqa</b> bo'limini tanlang.</p>
+    </div>
     <div class="kpi-grid" id="kpiGrid"></div>
     <div class="brand-row" id="brandRow"></div>
     <div class="panel-grid">
       <div>
         <div class="card">
-          <h3>Oylar bo'yicha <span class="hint">sotib olingan sana bo'yicha</span></h3>
+          <h3>Oylar bo'yicha savdo <span class="hint">so'nggi 6 oy</span></h3>
           <div class="chart" id="chartBox"></div>
           <div class="chart-legend">
-            <span><span class="legend-dot" style="background:var(--accent)"></span>Soni (dona)</span>
+            <span><span class="legend-dot" style="background:var(--accent)"></span>Nechta telefon</span>
             <span><span class="legend-dot" style="background:var(--gold)"></span>Foyda ($)</span>
           </div>
         </div>
         <div class="card">
-          <h3>So'nggi qo'shilganlar</h3>
+          <h3>Oxirgi qo'shilgan telefonlar</h3>
           <div id="recentList"></div>
         </div>
       </div>
       <div>
         <div class="card">
-          <h3>Ko'p sotib olingan manbalar</h3>
+          <h3>Kimlardan ko'p sotib olasiz</h3>
           <ul class="rank-list" id="topSources"></ul>
         </div>
         <div class="card">
-          <h3>Ko'p sotib olgan xaridorlar</h3>
+          <h3>Kimlar ko'p sotib oladi</h3>
           <ul class="rank-list" id="topBuyers"></ul>
         </div>
         <div class="card">
           <h3>Eslatmalar</h3>
-          <textarea class="notes-field" id="notesField" placeholder="Muhim eslatmalar, yo'qolgan/o'g'irlangan telefonlar va h.k."></textarea>
+          <textarea class="notes-field" id="notesField" placeholder="Bu yerga muhim narsalarni yozib qo'ying: masalan, kimga qarzga berilgan yoki yo'qolgan telefon haqida"></textarea>
           <button class="btn primary sm notes-save" id="saveNotesBtn">Saqlash</button>
         </div>
       </div>
@@ -345,38 +360,52 @@
   <div class="modal">
     <button class="modal-close" id="closePhoneModal">&times;</button>
     <h2 id="modalTitle">Yangi telefon</h2>
-    <div class="modal-sub">Barcha maydonlar ixtiyoriy, faqat model kiritish tavsiya etiladi.</div>
+    <div class="modal-sub">Faqat telefon nomini yozsangiz ham bo'ladi — qolganini keyin to'ldirishingiz mumkin.</div>
     <form id="phoneForm">
+      <div class="form-section-label">📱 Telefon haqida</div>
       <div class="form-grid">
-        <div class="field full"><label>Model / tavsif</label><input type="text" id="f_model" placeholder="13 PRO BLUE 128GB 86% LL/A"></div>
-        <div class="field"><label>Brend</label>
+        <div class="field full"><label>Telefon nomi</label><input type="text" id="f_model" placeholder="Masalan: iPhone 13 Pro, 128GB, ko'k"></div>
+        <div class="field"><label>Turi</label>
           <select id="f_brand"><option value="iphone">iPhone</option><option value="samsung">Samsung</option><option value="other">Boshqa</option></select>
         </div>
-        <div class="field"><label>IMEI</label><input type="text" id="f_imei" placeholder="35-xx-xx-xx-xx-xxxxx" class="mono"></div>
-        <div class="field"><label>Holati</label>
+        <div class="field"><label>Hozirgi holati</label>
           <select id="f_status">
-            <option value="stock">Omborda</option>
+            <option value="stock">Omborda (hali sotilmagan)</option>
             <option value="sold">Sotilgan</option>
-            <option value="lent">Band / berilgan</option>
-            <option value="lost">Yo'qolgan</option>
+            <option value="lent">Band / vaqtincha berilgan</option>
+            <option value="lost">Yo'qolgan / o'g'irlangan</option>
           </select>
         </div>
-        <div class="field"><label>Quti / karobka</label>
+        <div class="field"><label>IMEI raqami (ixtiyoriy)</label><input type="text" id="f_imei" placeholder="Sozlamalar → Bu haqda dan ko'rinadi" class="mono"></div>
+        <div class="field"><label>Qutisi bormi?</label>
           <select id="f_imeiBox"><option value="0">Yo'q</option><option value="1">Bor</option></select>
         </div>
-        <div class="field"><label>Kimdan olindi</label><input type="text" id="f_source"></div>
-        <div class="field"><label>Uning telefoni</label><input type="text" id="f_sourcePhone"></div>
-        <div class="field"><label>Sotib olingan sana</label><input type="date" id="f_buyDate"></div>
-        <div class="field"><label>Sotib olingan narx ($)</label><input type="number" step="1" id="f_buyPrice" class="mono"></div>
-        <div class="field"><label>Kimga sotildi</label><input type="text" id="f_buyer"></div>
-        <div class="field"><label>Uning telefoni</label><input type="text" id="f_buyerPhone"></div>
-        <div class="field"><label>Sotilgan sana</label><input type="date" id="f_sellDate"></div>
-        <div class="field"><label>Sotilgan narx ($)</label><input type="number" step="1" id="f_sellPrice" class="mono"></div>
-        <div class="field full"><label>Izoh</label><textarea id="f_note" placeholder="Kredit, holat, boshqa eslatmalar…"></textarea></div>
       </div>
+
+      <div class="form-section-label">🛒 Kimdan sotib olindi</div>
+      <div class="form-grid">
+        <div class="field"><label>Ismi</label><input type="text" id="f_source" placeholder="Masalan: Jasur aka"></div>
+        <div class="field"><label>Telefon raqami</label><input type="text" id="f_sourcePhone" placeholder="90 123 45 67"></div>
+        <div class="field"><label>Qachon olindi</label><input type="date" id="f_buyDate"></div>
+        <div class="field"><label>Qancha pulga olindi ($)</label><input type="number" step="1" id="f_buyPrice" class="mono" placeholder="0"></div>
+      </div>
+
+      <div class="form-section-label">💰 Kimga sotildi <span>(agar sotilgan bo'lsa)</span></div>
+      <div class="form-grid">
+        <div class="field"><label>Ismi</label><input type="text" id="f_buyer" placeholder="Masalan: Aziz aka"></div>
+        <div class="field"><label>Telefon raqami</label><input type="text" id="f_buyerPhone" placeholder="90 123 45 67"></div>
+        <div class="field"><label>Qachon sotildi</label><input type="date" id="f_sellDate"></div>
+        <div class="field"><label>Qancha pulga sotildi ($)</label><input type="number" step="1" id="f_sellPrice" class="mono" placeholder="0"></div>
+      </div>
+
+      <div class="form-section-label">📝 Izoh <span>(ixtiyoriy)</span></div>
+      <div class="form-grid">
+        <div class="field full"><textarea id="f_note" placeholder="Masalan: kreditga berilgan, ta'mirlanmoqchi va h.k."></textarea></div>
+      </div>
+
       <div class="form-actions">
-        <button type="button" class="btn" id="cancelPhoneBtn">Bekor qilish</button>
-        <button type="submit" class="btn primary" id="savePhoneBtn">Saqlash</button>
+        <button type="button" class="btn lg" id="cancelPhoneBtn">Bekor qilish</button>
+        <button type="submit" class="btn primary lg" id="savePhoneBtn">✓ Saqlash</button>
       </div>
     </form>
   </div>
@@ -396,12 +425,12 @@
 <div class="overlay" id="importOverlay">
   <div class="modal wide">
     <button class="modal-close" id="closeImportModal">&times;</button>
-    <h2>Excel / CSV import</h2>
-    <div class="modal-sub">Fayl tanlang, ustunlarni moslang va import qiling. iPhone, Samsung va boshqa brendlar avtomatik aniqlanadi.</div>
+    <h2>Excel fayldan telefonlarni yuklash</h2>
+    <div class="modal-sub">Eski Excel faylingizni tanlang — dastur o'zi o'qib, iPhone/Samsung/Boshqa bo'limlarga taqsimlab qo'yadi.</div>
 
     <label class="import-drop" id="importDrop">
       <input type="file" id="importFile" accept=".xlsx,.xls,.csv">
-      <div id="importDropText">Faylni shu yerga bosing yoki tanlang (.xlsx, .xls, .csv)</div>
+      <div id="importDropText">📂 Faylni tanlash uchun shu yerga bosing</div>
     </label>
 
     <div id="importConfig" hidden>
@@ -632,10 +661,31 @@
   /* ====================== section shell (per brand) ====================== */
   function sectionShellHTML(brand){
     return ''+
+      '<div class="page-intro">'+
+        '<h1>'+BRAND_LABEL[brand]+' telefonlar</h1>'+
+        '<p>Bu yerda barcha '+BRAND_LABEL[brand]+' telefonlaringiz ro\'yxati. Yangi telefon qo\'shish uchun pastdagi yashil tugmani bosing.</p>'+
+      '</div>'+
+      '<div class="toolbar">'+
+        '<button class="btn primary lg" id="addBtn-'+brand+'">+ Yangi telefon qo\'shish</button>'+
+        '<button class="btn lg" id="importBtn-'+brand+'">'+
+          '<svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 21V9m0 0l-4 4m4-4l4 4M4 3h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'+
+          'Fayldan yuklash'+
+        '</button>'+
+        '<div class="export-wrap">'+
+          '<button class="btn lg" id="exportBtn-'+brand+'">'+
+            '<svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 21h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'+
+            'Yuklab olish'+
+          '</button>'+
+          '<div class="export-menu" id="exportMenu-'+brand+'">'+
+            '<button id="exportCsv-'+brand+'">Excel jadval (.csv) sifatida</button>'+
+            '<button id="exportXlsx-'+brand+'">Excel fayl (.xlsx) sifatida</button>'+
+          '</div>'+
+        '</div>'+
+      '</div>'+
       '<div class="toolbar">'+
         '<div class="search-box">'+
           '<svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>'+
-          '<input type="text" id="search-'+brand+'" placeholder="Model, IMEI, ism yoki telefon bo\'yicha qidirish…">'+
+          '<input type="text" id="search-'+brand+'" placeholder="Qidirish: model, ism yoki telefon raqami…">'+
         '</div>'+
         '<div class="chip-row" id="chips-'+brand+'">'+
           '<button class="chip active" data-status="all">Hammasi</button>'+
@@ -644,22 +694,6 @@
           '<button class="chip" data-status="lent">Band</button>'+
           '<button class="chip" data-status="lost">Yo\'qolgan</button>'+
         '</div>'+
-        '<div class="spacer"></div>'+
-        '<button class="btn" id="importBtn-'+brand+'">'+
-          '<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 21V9m0 0l-4 4m4-4l4 4M4 3h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'+
-          'Import'+
-        '</button>'+
-        '<div class="export-wrap">'+
-          '<button class="btn" id="exportBtn-'+brand+'">'+
-            '<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 21h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'+
-            'Eksport'+
-          '</button>'+
-          '<div class="export-menu" id="exportMenu-'+brand+'">'+
-            '<button id="exportCsv-'+brand+'">CSV (.csv)</button>'+
-            '<button id="exportXlsx-'+brand+'">Excel (.xlsx)</button>'+
-          '</div>'+
-        '</div>'+
-        '<button class="btn primary" id="addBtn-'+brand+'">+ Yangi '+BRAND_LABEL[brand]+'</button>'+
       '</div>'+
       '<div class="table-wrap">'+
         '<div class="table-scroll">'+
@@ -826,12 +860,12 @@
     var lostValue = lost.reduce(function(s,p){ return s+(p.buyPrice||0); },0);
 
     var kpis = [
-      {label:"Jami foyda", value:fmtMoney(totalProfit), cls:totalProfit>=0?"success":"danger", sub:sold.length+" ta sotilgan telefondan"},
-      {label:"Jami aylanma", value:fmtMoney(totalRevenue), cls:"", sub:"Sotilganlar bo'yicha tushum"},
-      {label:"O'rtacha marja", value:margin.toFixed(1)+"%", cls:"gold", sub:"Foyda / tannarx nisbati"},
-      {label:"Omborda", value:stock.length+" dona", cls:"", sub:fmtMoney(capitalInStock)+" band qilingan"},
-      {label:"Band / berilgan", value:lent.length+" dona", cls:"", sub:"Narxsiz yoki vaqtinchalik"},
-      {label:"Yo'qolgan", value:lost.length+" dona", cls:lost.length?"danger":"", sub:lostValue?fmtMoney(lostValue)+" zarar":"Hozircha yo'q"}
+      {label:"Sof foyda", value:fmtMoney(totalProfit), cls:totalProfit>=0?"success":"danger", sub:sold.length+" ta telefon sotilgan"},
+      {label:"Jami sotuv summasi", value:fmtMoney(totalRevenue), cls:"", sub:"Sotilgan telefonlardan tushgan pul"},
+      {label:"Foyda foizi", value:margin.toFixed(1)+"%", cls:"gold", sub:"Har $100 xarajatdan qancha foyda"},
+      {label:"Omborda qolgan", value:stock.length+" dona", cls:"", sub:fmtMoney(capitalInStock)+" qiymatida"},
+      {label:"Band / berilgan", value:lent.length+" dona", cls:"", sub:"Hali pul olinmagan"},
+      {label:"Yo'qolgan", value:lost.length+" dona", cls:lost.length?"danger":"", sub:lostValue?fmtMoney(lostValue)+" zarar":"Yo'q, hammasi joyida"}
     ];
     document.getElementById("kpiGrid").innerHTML = kpis.map(function(k){
       return '<div class="kpi"><div class="kpi-label">'+esc(k.label)+'</div>'+
