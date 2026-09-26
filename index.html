@@ -770,7 +770,7 @@
 
   function samsungGenAndParty(model){
     var m = (model||"").toUpperCase();
-    var mm = m.match(/\b(S|A|M)\s?(\d{1,3})/);
+    var mm = m.match(/\b(S|A|M)\s?(\d{1,2})/);
     if(mm){
       var gen = mm[1]+mm[2];
       var suffix = "";
