@@ -17,7 +17,7 @@
     color-scheme:dark;
   }
   *{box-sizing:border-box;}
-  html,body{ background:var(--bg); }
+  html,body{ background:var(--bg); height:100%; }
   body{
     margin:0; color:var(--ink);
     font-family:'Manrope',ui-sans-serif,system-ui,sans-serif;
@@ -28,40 +28,50 @@
   button{ font-family:inherit; }
   ::selection{ background:var(--accent-soft); }
 
-  .shell{ max-width:1180px; margin:0 auto; padding:0 20px 64px; }
-
-  header.top{
-    position:sticky; top:env(safe-area-inset-top,0px); z-index:40;
-    background:var(--bg); border-bottom:1px solid var(--border);
+  /* ---------- app shell: left sidebar + main ---------- */
+  .app{ display:flex; min-height:100vh; align-items:flex-start; }
+  .sidebar{
+    width:224px; flex:none; background:var(--surface); border-right:1px solid var(--border);
+    position:sticky; top:0; height:100vh; overflow-y:auto; padding:18px 14px;
+    display:flex; flex-direction:column; gap:18px; z-index:40;
   }
-  .top-inner{
-    max-width:1180px; margin:0 auto; padding:16px 20px 0;
-    display:flex; align-items:center; gap:14px; flex-wrap:wrap;
-  }
-  .brand{ display:flex; align-items:center; gap:10px; margin-right:auto; }
+  .brand{ display:flex; align-items:center; gap:10px; padding:0 4px; }
   .brand-mark{ width:34px; height:34px; border-radius:9px; background:linear-gradient(150deg,var(--accent),#22337A); display:flex; align-items:center; justify-content:center; flex:none; }
-  .brand-name{ font-weight:800; font-size:19px; letter-spacing:-0.01em; }
-  .brand-sub{ font-size:12px; color:var(--ink-dim); margin-top:-2px; }
+  .brand-name{ font-weight:800; font-size:18px; letter-spacing:-0.01em; }
+  .brand-sub{ font-size:11px; color:var(--ink-dim); margin-top:-2px; }
+
+  nav.tabs{ display:flex; flex-direction:column; gap:3px; }
+  .tab-btn{
+    appearance:none; border:none; background:transparent; color:var(--ink-dim);
+    font-weight:700; font-size:14.5px; padding:11px 12px; border-radius:10px;
+    cursor:pointer; white-space:nowrap; display:flex; align-items:center; gap:9px; text-align:left; width:100%;
+  }
+  .tab-btn.active{ color:var(--ink); background:var(--accent-soft); }
+  .tab-btn:hover{ color:var(--ink); background:var(--surface-2); }
+  .tab-btn.active:hover{ background:var(--accent-soft); }
+  .tab-count{ margin-left:auto; font-size:11px; color:var(--ink-faint); background:var(--surface-2); padding:1px 7px; border-radius:99px; font-weight:700; }
+  .tab-btn.active .tab-count{ color:var(--accent); background:var(--bg); }
+  .nav-divider{ height:1px; background:var(--border); margin:4px 6px; }
+
+  .sidebar-foot{ margin-top:auto; padding:10px 6px 2px; }
   .status-dot{ width:8px; height:8px; border-radius:50%; background:var(--ink-faint); flex:none; transition:background .2s; }
   .status-dot.live{ background:var(--success); }
   .status-dot.off{ background:var(--danger); }
-  .status-wrap{ display:flex; align-items:center; gap:6px; font-size:12px; color:var(--ink-dim); }
+  .status-wrap{ display:flex; align-items:center; gap:6px; font-size:11.5px; color:var(--ink-dim); }
 
-  nav.tabs{ display:flex; gap:4px; margin-top:14px; overflow-x:auto; scrollbar-width:none; }
-  nav.tabs::-webkit-scrollbar{ display:none; }
-  .tab-btn{
-    appearance:none; border:none; background:transparent; color:var(--ink-dim);
-    font-weight:700; font-size:15.5px; padding:12px 4px; border-bottom:3px solid transparent;
-    cursor:pointer; white-space:nowrap; margin-right:22px; display:flex; align-items:center; gap:6px;
-  }
-  .tab-btn.active{ color:var(--ink); border-bottom-color:var(--accent); }
-  .tab-btn:hover{ color:var(--ink); }
-  .tab-count{ font-size:11px; color:var(--ink-faint); background:var(--surface-2); padding:1px 7px; border-radius:99px; font-weight:700; }
-  .tab-btn.active .tab-count{ color:var(--accent); background:var(--accent-soft); }
-
-  main{ padding-top:22px; }
+  .main{ flex:1; min-width:0; }
+  main.shell{ padding:24px 28px 64px; }
   section{ display:none; }
   section.active{ display:block; }
+
+  @media (max-width:860px){
+    .app{ flex-direction:column; }
+    .sidebar{ position:static; width:100%; height:auto; flex-direction:row; align-items:center; overflow-x:auto; padding:10px 12px; gap:12px; }
+    nav.tabs{ flex-direction:row; }
+    .nav-divider{ width:1px; height:24px; margin:0 4px; }
+    .sidebar-foot{ margin:0 0 0 auto; padding:0; }
+    main.shell{ padding:18px 16px 48px; }
+  }
 
   .setup-banner{
     background:var(--gold-soft); border:1px solid var(--gold); border-radius:14px; padding:16px 18px;
@@ -76,7 +86,7 @@
   .page-intro p{ font-size:14px; color:var(--ink-dim); line-height:1.6; max-width:640px; }
   .page-intro b{ color:var(--ink); }
 
-  .kpi-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:12px; margin-bottom:22px; }
+  .kpi-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:12px; margin-bottom:22px; }
   .kpi{
     background:var(--surface); border:1px solid var(--border); border-radius:14px;
     padding:16px 16px 14px; box-shadow:var(--shadow);
@@ -101,9 +111,9 @@
   .brand-icon.other{ background:var(--slate-soft); color:var(--slate); }
   .brand-card-name{ font-weight:800; font-size:14px; }
   .brand-card-meta{ font-size:12px; color:var(--ink-dim); margin-top:2px; }
-  .brand-card-profit{ margin-left:auto; text-align:right; }
-  .brand-card-profit .v{ font-family:'IBM Plex Mono',monospace; font-weight:700; font-size:15px; }
-  .brand-card-profit .l{ font-size:10.5px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.03em; }
+  .brand-card-count{ margin-left:auto; text-align:right; }
+  .brand-card-count .v{ font-family:'IBM Plex Mono',monospace; font-weight:700; font-size:17px; }
+  .brand-card-count .l{ font-size:10.5px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.03em; }
 
   .panel-grid{ display:grid; grid-template-columns:1.4fr 1fr; gap:16px; align-items:start; }
   @media (max-width:860px){ .panel-grid{ grid-template-columns:1fr; } }
@@ -183,7 +193,7 @@
   .export-wrap{ position:relative; }
   .export-menu{
     position:absolute; right:0; top:calc(100% + 6px); background:var(--surface); border:1px solid var(--border);
-    border-radius:10px; box-shadow:var(--shadow); min-width:190px; padding:6px; z-index:30; display:none;
+    border-radius:10px; box-shadow:var(--shadow); min-width:220px; padding:6px; z-index:30; display:none;
   }
   .export-menu.open{ display:block; }
   .export-menu button{
@@ -192,38 +202,24 @@
   }
   .export-menu button:hover{ background:var(--surface-2); }
 
-  .table-wrap{ background:var(--surface); border:1px solid var(--border); border-radius:14px; overflow:hidden; box-shadow:var(--shadow); }
+  /* ---------- excel-style table ---------- */
+  .table-wrap{ background:var(--surface); border:1px solid var(--border); border-radius:10px; overflow:hidden; box-shadow:var(--shadow); }
   table{ width:100%; border-collapse:collapse; font-size:13px; }
   thead th{
-    text-align:left; font-size:11px; text-transform:uppercase; letter-spacing:.03em; color:var(--ink-dim);
-    padding:12px 14px; border-bottom:1px solid var(--border); cursor:pointer; user-select:none; white-space:nowrap;
-    background:var(--surface-2);
+    text-align:left; font-size:11.5px; font-weight:800; color:var(--ink-dim);
+    padding:9px 12px; border:1px solid var(--border); cursor:pointer; user-select:none; white-space:nowrap;
+    background:var(--surface-2); position:sticky; top:0; z-index:5;
   }
   thead th:hover{ color:var(--ink); }
-  thead th .arrow{ opacity:.5; font-size:10px; margin-left:3px; }
-  tbody td{ padding:12px 14px; border-bottom:1px solid var(--border); vertical-align:top; }
-  tbody tr:last-child td{ border-bottom:none; }
+  thead th .arrow{ opacity:.6; font-size:10px; margin-left:3px; }
+  thead th.rownum, tbody td.rownum{ text-align:center; width:38px; color:var(--ink-faint); background:var(--surface-2); }
+  tbody td{ padding:8px 12px; border:1px solid var(--border); vertical-align:top; }
+  tbody tr:nth-child(even){ background:rgba(255,255,255,.015); }
   tbody tr:hover{ background:var(--surface-2); }
-  .cell-model{ font-weight:700; max-width:220px; }
+  .cell-model{ font-weight:700; }
   .cell-sub{ color:var(--ink-faint); font-size:11.5px; margin-top:2px; }
-  .profit-pos{ color:var(--success); font-weight:700; }
-  .profit-neg{ color:var(--danger); font-weight:700; }
-  .profit-zero{ color:var(--ink-faint); }
   .row-actions{ display:flex; gap:6px; }
-  .table-scroll{ overflow-x:auto; }
-
-  .mlabel{ display:none; }
-  @media (max-width:760px){
-    .table-wrap table thead{ display:none; }
-    .table-wrap table, .table-wrap tbody, .table-wrap tr, .table-wrap td{ display:block; width:100%; }
-    .table-wrap tr{ padding:14px; border-bottom:1px solid var(--border); }
-    .table-wrap td{ border:none; padding:4px 0; }
-    .table-wrap td[data-row]{ display:flex; align-items:baseline; gap:8px; }
-    .mlabel{ display:inline-block; flex:none; width:92px; color:var(--ink-faint); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.02em; }
-    .card-top{ display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:6px; }
-  }
-
-  .pager{ display:flex; align-items:center; justify-content:center; gap:10px; padding:16px 0 4px; font-size:13px; color:var(--ink-dim); }
+  .table-scroll{ overflow-x:auto; max-height:calc(100vh - 260px); overflow-y:auto; }
 
   .overlay{
     position:fixed; inset:0; background:rgba(3,6,16,.6); display:none; align-items:flex-start; justify-content:center;
@@ -255,6 +251,15 @@
   .modal.small{ max-width:400px; }
   .modal-close{ float:right; background:none; border:none; color:var(--ink-faint); font-size:20px; cursor:pointer; line-height:1; }
 
+  .swatch-row{ display:flex; gap:9px; flex-wrap:wrap; padding:2px 0; }
+  .swatch{
+    width:30px; height:30px; border-radius:50%; border:2px solid var(--border); cursor:pointer;
+    padding:0; flex:none; box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
+  }
+  .swatch.active{ border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft); }
+  .swatch-label{ font-size:12px; color:var(--ink-dim); margin-top:6px; min-height:16px; }
+  .swatch-label b{ color:var(--ink); }
+
   .import-drop{
     border:2px dashed var(--border); border-radius:12px; padding:28px 16px; text-align:center; cursor:pointer;
     color:var(--ink-dim); font-size:13px;
@@ -273,6 +278,15 @@
   .import-progress{ height:6px; background:var(--surface-2); border-radius:99px; overflow:hidden; margin-top:10px; display:none; }
   .import-progress .bar{ height:100%; background:var(--accent); width:0%; transition:width .2s; }
 
+  .lock-wrap{ display:flex; align-items:center; justify-content:center; min-height:60vh; }
+  .lock-card{ background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:32px; max-width:360px; width:100%; text-align:center; box-shadow:var(--shadow); }
+  .lock-card .icon{ font-size:34px; margin-bottom:10px; }
+  .lock-card h2{ font-size:19px; margin-bottom:6px; }
+  .lock-card p{ font-size:13px; color:var(--ink-dim); margin-bottom:18px; }
+  .lock-card input{ width:100%; padding:12px 14px; border-radius:10px; border:1px solid var(--border); background:var(--surface-2); color:var(--ink); font:inherit; font-size:15px; text-align:center; margin-bottom:12px; }
+
+  .data-actions{ display:flex; gap:10px; flex-wrap:wrap; }
+
   #toasts{ position:fixed; bottom:calc(18px + env(safe-area-inset-bottom,0px)); left:50%; transform:translateX(-50%); z-index:200; display:flex; flex-direction:column; gap:8px; align-items:center; }
   .toast{
     background:var(--ink); color:var(--bg); padding:10px 16px; border-radius:10px; font-size:13px; font-weight:600;
@@ -287,8 +301,8 @@
   [hidden]{ display:none!important; }
 </style>
 
-<header class="top">
-  <div class="top-inner">
+<div class="app">
+  <aside class="sidebar">
     <div class="brand">
       <div class="brand-mark">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
@@ -301,74 +315,127 @@
         <div class="brand-sub">Telefon savdo boshqaruvi</div>
       </div>
     </div>
-    <div class="status-wrap"><span class="status-dot" id="statusDot"></span><span id="statusText">Ulanmoqda…</span></div>
-  </div>
-  <nav class="tabs top-inner" id="tabNav">
-    <button class="tab-btn active" data-tab="dashboard">🏠 Bosh sahifa</button>
-    <button class="tab-btn" data-tab="iphone">📱 iPhone <span class="tab-count" id="count-iphone">0</span></button>
-    <button class="tab-btn" data-tab="samsung">📱 Samsung <span class="tab-count" id="count-samsung">0</span></button>
-    <button class="tab-btn" data-tab="other">📦 Boshqa <span class="tab-count" id="count-other">0</span></button>
-  </nav>
-</header>
-
-<main class="shell">
-
-  <section id="tab-dashboard" class="active">
-    <div id="setupBanner" class="setup-banner" hidden></div>
-    <div class="page-intro">
-      <h1>Salom! 👋</h1>
-      <p>Bu yerda barcha telefonlaringiz va ulardan tushgan foyda ko'rinadi. Yangi telefon qo'shish uchun yuqoridan <b>iPhone</b>, <b>Samsung</b> yoki <b>Boshqa</b> bo'limini tanlang.</p>
+    <nav class="tabs" id="tabNav">
+      <button class="tab-btn active" data-tab="dashboard">🏠 <span>Bosh sahifa</span></button>
+      <button class="tab-btn" data-tab="iphone">📱 <span>iPhone</span> <span class="tab-count" id="count-iphone">0</span></button>
+      <button class="tab-btn" data-tab="samsung">📱 <span>Samsung</span> <span class="tab-count" id="count-samsung">0</span></button>
+      <button class="tab-btn" data-tab="other">📦 <span>Boshqa</span> <span class="tab-count" id="count-other">0</span></button>
+      <div class="nav-divider"></div>
+      <button class="tab-btn" data-tab="finance">🔒 <span>Moliya</span></button>
+    </nav>
+    <div class="sidebar-foot">
+      <div class="status-wrap"><span class="status-dot" id="statusDot"></span><span id="statusText">Ulanmoqda…</span></div>
     </div>
-    <div class="kpi-grid" id="kpiGrid"></div>
-    <div class="brand-row" id="brandRow"></div>
-    <div class="panel-grid">
-      <div>
-        <div class="card">
-          <h3>Oylar bo'yicha savdo <span class="hint">so'nggi 6 oy</span></h3>
-          <div class="chart" id="chartBox"></div>
-          <div class="chart-legend">
-            <span><span class="legend-dot" style="background:var(--accent)"></span>Nechta telefon</span>
-            <span><span class="legend-dot" style="background:var(--gold)"></span>Foyda ($)</span>
+  </aside>
+
+  <div class="main">
+    <main class="shell">
+
+      <section id="tab-dashboard" class="active">
+        <div id="setupBanner" class="setup-banner" hidden></div>
+        <div class="page-intro">
+          <h1>Salom! 👋</h1>
+          <p>Bu yerda barcha telefonlaringiz ko'rinadi. Yangi telefon qo'shish uchun chapdan <b>iPhone</b>, <b>Samsung</b> yoki <b>Boshqa</b> bo'limini tanlang.</p>
+        </div>
+        <div class="kpi-grid" id="kpiGrid"></div>
+        <div class="brand-row" id="brandRow"></div>
+        <div class="panel-grid">
+          <div>
+            <div class="card">
+              <h3>Oylar bo'yicha savdo <span class="hint">so'nggi 6 oy</span></h3>
+              <div class="chart" id="chartBox"></div>
+            </div>
+          </div>
+          <div>
+            <div class="card">
+              <h3>Oxirgi qo'shilgan telefonlar</h3>
+              <div id="recentList"></div>
+            </div>
+            <div class="card">
+              <h3>Eslatmalar</h3>
+              <textarea class="notes-field" id="notesField" placeholder="Bu yerga muhim narsalarni yozib qo'ying"></textarea>
+              <button class="btn primary sm notes-save" id="saveNotesBtn">Saqlash</button>
+            </div>
           </div>
         </div>
-        <div class="card">
-          <h3>Oxirgi qo'shilgan telefonlar</h3>
-          <div id="recentList"></div>
-        </div>
-      </div>
-      <div>
-        <div class="card">
-          <h3>Kimlardan ko'p sotib olasiz</h3>
-          <ul class="rank-list" id="topSources"></ul>
-        </div>
-        <div class="card">
-          <h3>Kimlar ko'p sotib oladi</h3>
-          <ul class="rank-list" id="topBuyers"></ul>
-        </div>
-        <div class="card">
-          <h3>Eslatmalar</h3>
-          <textarea class="notes-field" id="notesField" placeholder="Bu yerga muhim narsalarni yozib qo'ying: masalan, kimga qarzga berilgan yoki yo'qolgan telefon haqida"></textarea>
-          <button class="btn primary sm notes-save" id="saveNotesBtn">Saqlash</button>
-        </div>
-      </div>
-    </div>
-  </section>
+      </section>
 
-  <section id="tab-iphone"><div id="shell-iphone"></div></section>
-  <section id="tab-samsung"><div id="shell-samsung"></div></section>
-  <section id="tab-other"><div id="shell-other"></div></section>
+      <section id="tab-iphone"><div id="shell-iphone"></div></section>
+      <section id="tab-samsung"><div id="shell-samsung"></div></section>
+      <section id="tab-other"><div id="shell-other"></div></section>
 
-</main>
+      <section id="tab-finance">
+        <div id="financeLock" class="lock-wrap">
+          <div class="lock-card">
+            <div class="icon">🔒</div>
+            <h2>Moliyaviy hisobot</h2>
+            <p>Foyda, savdo summasi va eksport/import shu yerda. Davom etish uchun parolni kiriting.</p>
+            <input type="password" id="financePassword" placeholder="Parol">
+            <button class="btn primary lg" style="width:100%" id="financeUnlockBtn">Kirish</button>
+          </div>
+        </div>
+        <div id="financeContent" hidden>
+          <div class="page-intro">
+            <h1>🔒 Moliyaviy hisobot</h1>
+            <p>Foyda, savdo va eksport/import faqat shu yerda ko'rinadi.</p>
+          </div>
+          <div class="kpi-grid" id="finKpiGrid"></div>
+          <div class="panel-grid">
+            <div>
+              <div class="card">
+                <h3>Oylik foyda <span class="hint">so'nggi 6 oy</span></h3>
+                <div class="chart" id="finChartBox"></div>
+                <div class="chart-legend">
+                  <span><span class="legend-dot" style="background:var(--accent)"></span>Nechta telefon</span>
+                  <span><span class="legend-dot" style="background:var(--gold)"></span>Foyda ($)</span>
+                </div>
+              </div>
+              <div class="card">
+                <h3>Ma'lumotlarni boshqarish</h3>
+                <div class="data-actions">
+                  <button class="btn lg" id="finImportBtn">📥 Fayldan yuklash</button>
+                  <div class="export-wrap">
+                    <button class="btn lg" id="finExportBtn">📤 Yuklab olish</button>
+                    <div class="export-menu" id="finExportMenu">
+                      <button data-brand="iphone">Faqat iPhone</button>
+                      <button data-brand="samsung">Faqat Samsung</button>
+                      <button data-brand="other">Faqat Boshqa</button>
+                      <button data-brand="all">Barcha telefonlar</button>
+                    </div>
+                  </div>
+                  <button class="btn lg danger" id="newMonthBtn">🗓️ Yangi oy boshlash</button>
+                </div>
+                <p style="font-size:12px; color:var(--ink-dim); margin-top:12px; line-height:1.6;">
+                  "Yangi oy boshlash" — barcha ma'lumotlarni Excel fayl qilib yuklab beradi, so'ng <b style="color:var(--ink)">sotilgan</b> telefonlarni bazadan o'chiradi. Omborda/band/yo'qolgan telefonlar saqlanib qoladi.
+                </p>
+              </div>
+            </div>
+            <div>
+              <div class="card">
+                <h3>Kimlardan ko'p sotib olasiz</h3>
+                <ul class="rank-list" id="topSources"></ul>
+              </div>
+              <div class="card">
+                <h3>Kimlar ko'p sotib oladi</h3>
+                <ul class="rank-list" id="topBuyers"></ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
 
 <div class="overlay" id="phoneOverlay">
   <div class="modal">
     <button class="modal-close" id="closePhoneModal">&times;</button>
     <h2 id="modalTitle">Yangi telefon</h2>
-    <div class="modal-sub">Faqat telefon nomini yozsangiz ham bo'ladi — qolganini keyin to'ldirishingiz mumkin.</div>
+    <div class="modal-sub" id="modalSub">Faqat telefon nomini yozsangiz ham bo'ladi — qolganini keyin to'ldirishingiz mumkin.</div>
     <form id="phoneForm">
       <div class="form-section-label">📱 Telefon haqida</div>
       <div class="form-grid">
-        <div class="field full"><label>Telefon nomi</label><input type="text" id="f_model" placeholder="Masalan: iPhone 13 Pro, 128GB, ko'k"></div>
         <div class="field"><label>Turi</label>
           <select id="f_brand"><option value="iphone">iPhone</option><option value="samsung">Samsung</option><option value="other">Boshqa</option></select>
         </div>
@@ -380,7 +447,41 @@
             <option value="lost">Yo'qolgan / o'g'irlangan</option>
           </select>
         </div>
-        <div class="field"><label>IMEI raqami (ixtiyoriy)</label><input type="text" id="f_imei" placeholder="Sozlamalar → Bu haqda dan ko'rinadi" class="mono"></div>
+      </div>
+
+      <div id="iphonePicker">
+        <div class="form-grid" style="margin-top:12px">
+          <div class="field"><label>Model</label>
+            <select id="f_ip_model"></select>
+          </div>
+          <div class="field"><label>Xotira</label>
+            <select id="f_ip_memory">
+              <option>64GB</option><option>128GB</option><option selected>256GB</option><option>512GB</option><option>1TB</option>
+            </select>
+          </div>
+        </div>
+        <div class="field" style="margin-top:12px"><label>Rangi</label>
+          <div class="swatch-row" id="ip_colorSwatches"></div>
+          <div class="swatch-label" id="ip_colorLabel"></div>
+        </div>
+        <div class="form-grid" style="margin-top:12px">
+          <div class="field"><label>Batareya holati (%)</label><input type="number" min="0" max="100" id="f_ip_battery" placeholder="88"></div>
+          <div class="field"><label>Region kodi</label><input type="text" id="f_ip_region" placeholder="Masalan: LL/A, KH/A, ZA/A"></div>
+        </div>
+      </div>
+
+      <div id="otherPicker">
+        <div class="form-grid" style="margin-top:12px">
+          <div class="field full"><label>Telefon nomi</label><input type="text" id="f_other_model" placeholder="Masalan: Galaxy S24 Ultra, 256GB"></div>
+        </div>
+        <div class="field" style="margin-top:12px"><label>Rangi (ixtiyoriy)</label>
+          <div class="swatch-row" id="other_colorSwatches"></div>
+          <div class="swatch-label" id="other_colorLabel"></div>
+        </div>
+      </div>
+
+      <div class="form-grid" style="margin-top:12px">
+        <div class="field"><label>IMEI raqami (ixtiyoriy)</label><input type="text" id="f_imei" placeholder="35-29-61-65-23-15547" class="mono" maxlength="20"></div>
         <div class="field"><label>Qutisi bormi?</label>
           <select id="f_imeiBox"><option value="0">Yo'q</option><option value="1">Bor</option></select>
         </div>
@@ -417,11 +518,23 @@
 
 <div class="overlay" id="confirmOverlay">
   <div class="modal small">
-    <h2>O'chirishni tasdiqlang</h2>
+    <h2 id="confirmTitle">O'chirishni tasdiqlang</h2>
     <div class="modal-sub" id="confirmText">Ushbu telefon yozuvini o'chirmoqchimisiz? Bu amalni qaytarib bo'lmaydi.</div>
     <div class="form-actions">
       <button class="btn" id="confirmCancel">Bekor qilish</button>
       <button class="btn danger" id="confirmOk">O'chirish</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="filenameOverlay">
+  <div class="modal small">
+    <h2>Faylga nom bering</h2>
+    <div class="modal-sub">Excel fayl shu nom bilan saqlanadi.</div>
+    <div class="field"><input type="text" id="filenameInput"></div>
+    <div class="form-actions">
+      <button class="btn" id="filenameCancel">Bekor qilish</button>
+      <button class="btn primary" id="filenameOk">Yuklab olish</button>
     </div>
   </div>
 </div>
@@ -439,9 +552,7 @@
 
     <div id="importConfig" hidden>
       <div class="import-summary" id="importSummary"></div>
-
       <button type="button" class="btn sm ghost" id="toggleAdvancedBtn">⚙️ Ustunlarni o'zim moslashtirmoqchiman</button>
-
       <div id="importAdvanced" hidden>
         <div class="form-grid" style="margin-top:14px">
           <div class="field"><label>Ma'lumotlar boshlanadigan qator</label><input type="number" min="1" id="importStartRow" value="1"></div>
@@ -451,7 +562,6 @@
           <table class="map-table" id="mapTable"></table>
         </div>
       </div>
-
       <div class="import-progress" id="importProgress"><div class="bar" id="importProgressBar"></div></div>
     </div>
 
@@ -472,10 +582,7 @@
 (function(){
   "use strict";
 
-  /* ====================== FIREBASE CONFIG ======================
-     Replace with your own project's web app config:
-     Firebase console -> Project settings -> General -> Your apps -> Web app -> SDK setup and configuration
-  ================================================================= */
+  /* ====================== FIREBASE CONFIG ====================== */
   var firebaseConfig = {
     apiKey: "AIzaSyAP8I1WNOtmeixJy8-T9wr7ZNc848Dwg9U",
     authDomain: "messeges-to-her.firebaseapp.com",
@@ -487,6 +594,9 @@
   };
   var firebaseReady = firebaseConfig.apiKey.indexOf("REPLACE") === -1;
 
+  /* Change this to whatever password should unlock the Moliya (finance) tab. */
+  var FINANCE_PASSWORD = "ombor2026";
+
   var BRANDS = ["iphone","samsung","other"];
   var BRAND_LABEL = {iphone:"iPhone", samsung:"Samsung", other:"Boshqa"};
 
@@ -494,18 +604,75 @@
     phones: [],
     notes: "",
     sec: {
-      iphone: {search:"", status:"all", sortKey:"seq", sortDir:"desc", page:1},
-      samsung:{search:"", status:"all", sortKey:"seq", sortDir:"desc", page:1},
-      other:  {search:"", status:"all", sortKey:"seq", sortDir:"desc", page:1}
+      iphone: {search:"", status:"all"},
+      samsung:{search:"", status:"all"},
+      other:  {search:"", status:"all"}
     },
-    pageSize: 20,
     editingId: null,
     editingBrand: "iphone",
-    deleteId: null
+    deleteId: null,
+    financeUnlocked: false,
+    pendingExport: null
   };
 
   var db = null, auth = null, phonesCol = null, notesDoc = null;
-  var importParsed = null; // {rows: [...], colCount, mapping: {}}
+  var importParsed = null;
+
+  /* ====================== iPhone / Samsung color + model data ====================== */
+  var IPHONE_MODELS = ["SE (2020)","SE (2022)","X","XS","XS Max","XR",
+    "11","11 Pro","11 Pro Max","12 Mini","12","12 Pro","12 Pro Max",
+    "13 Mini","13","13 Pro","13 Pro Max","14","14 Plus","14 Pro","14 Pro Max",
+    "15","15 Plus","15 Pro","15 Pro Max","16","16 Plus","16 Pro","16 Pro Max"];
+
+  var C_11 = [["Qora","#0b0c0e"],["Oq","#f4f4f2"],["Yashil","#a6b6a3"],["Sariq","#f2d33c"],["Binafsha","#c0bcd6"],["Qizil","#b91c2b"]];
+  var C_11PRO = [["Space Gray","#54524f"],["Kumush","#e6e6e6"],["Oltin","#f0d8b0"],["Midnight Green","#425b52"]];
+  var C_12 = [["Qora","#0e0f10"],["Oq","#f4f4f2"],["Qizil","#b91c2b"],["Yashil","#a9c6b8"],["Ko'k","#3d5a80"],["Binafsha","#cfc2d9"]];
+  var C_12PRO = [["Grafit","#54524f"],["Kumush","#e6e6e6"],["Oltin","#f0d8b0"],["Pacific Blue","#3a5468"]];
+  var C_13 = [["Pushti","#f0d6d6"],["Ko'k","#a9c1d9"],["Midnight","#1b1d22"],["Starlight","#f0e6d8"],["Qizil","#b91c2b"],["Yashil","#8fae94"]];
+  var C_13PRO = [["Grafit","#4a4a4a"],["Oltin","#f0dfc0"],["Kumush","#e6e6e6"],["Sierra Blue","#a7c1d9"],["Alp Yashil","#728c73"]];
+  var C_14 = [["Ko'k","#7f97b8"],["Binafsha","#cabede"],["Midnight","#1b1d22"],["Starlight","#f0e6d8"],["Qizil","#b91c2b"],["Sariq","#f2d97a"]];
+  var C_14PRO = [["Space Qora","#3a3a3c"],["Kumush","#e6e6e6"],["Oltin","#f0dfc0"],["Deep Purple","#5a4c68"]];
+  var C_15 = [["Qora","#3a3a3c"],["Ko'k","#a9c1d9"],["Yashil","#a9c6a0"],["Sariq","#f2e39c"],["Pushti","#f0d6d9"]];
+  var C_15PRO = [["Qora Titan","#3a3a3a"],["Oq Titan","#e8e4dc"],["Ko'k Titan","#4c5b6a"],["Tabiiy Titan","#8a8378"]];
+  var C_16 = [["Qora","#2e2e30"],["Oq","#f2f2ee"],["Pushti","#f0cfd6"],["Zumrad","#7d9c9c"],["Ultramarin","#5f74c9"]];
+  var C_16PRO = [["Qora Titan","#3a3a3a"],["Oq Titan","#e8e4dc"],["Tabiiy Titan","#8a8378"],["Cho'l Titan","#b6a184"]];
+
+  var IPHONE_COLORS = {
+    "SE (2020)": [["Qora","#0b0c0e"],["Oq","#f4f4f2"],["Qizil","#b91c2b"]],
+    "SE (2022)": [["Midnight","#1b1d22"],["Starlight","#f0e6d8"],["Qizil","#b91c2b"]],
+    "X": [["Space Gray","#3a3c3e"],["Kumush","#e6e6e6"]],
+    "XS": [["Space Gray","#3a3c3e"],["Kumush","#e6e6e6"],["Oltin","#f0d8b0"]],
+    "XS Max": [["Space Gray","#3a3c3e"],["Kumush","#e6e6e6"],["Oltin","#f0d8b0"]],
+    "XR": [["Qora","#0b0c0e"],["Oq","#f4f4f2"],["Ko'k","#3b5b92"],["Sariq","#f2d33c"],["Marjon","#ff7a5c"],["Qizil","#b91c2b"]],
+    "11": C_11, "11 Pro": C_11PRO, "11 Pro Max": C_11PRO,
+    "12 Mini": C_12, "12": C_12, "12 Pro": C_12PRO, "12 Pro Max": C_12PRO,
+    "13 Mini": C_13, "13": C_13, "13 Pro": C_13PRO, "13 Pro Max": C_13PRO,
+    "14": C_14, "14 Plus": C_14, "14 Pro": C_14PRO, "14 Pro Max": C_14PRO,
+    "15": C_15, "15 Plus": C_15, "15 Pro": C_15PRO, "15 Pro Max": C_15PRO,
+    "16": C_16, "16 Plus": C_16, "16 Pro": C_16PRO, "16 Pro Max": C_16PRO
+  };
+
+  var SAMSUNG_COLORS = {
+    s: [["Qora","#1c1c1e"],["Kumush","#d6d6d6"],["Yashil","#8fae94"],["Binafsha","#b9a8d6"],["Ko'k","#7f97b8"],["Kremli","#e8ddc7"]],
+    a: [["Qora","#242424"],["Oq","#eeeeee"],["Ko'k","#5c7ea3"],["Yashil","#8fae94"],["Binafsha","#b9a8d6"]],
+    note: [["Qora","#1c1c1e"],["Bronza","#8a6a4e"],["Kumush","#d6d6d6"],["Binafsha","#7c6a91"]],
+    zfold: [["Qora","#1c1c1e"],["Kumush","#d6d6d6"],["Ko'k","#5c7ea3"]],
+    zflip: [["Qora","#1c1c1e"],["Krem","#e8ddc7"],["Pushti","#f0d6da"],["Sariq","#f2d97a"]],
+    m: [["Qora","#242424"],["Ko'k","#5c7ea3"],["Yashil","#8fae94"]],
+    tab: [["Qora","#242424"],["Kumush","#d6d6d6"]],
+    generic: [["Qora","#242424"],["Oq","#eeeeee"],["Kumush","#d6d6d6"],["Ko'k","#5c7ea3"],["Yashil","#8fae94"],["Binafsha","#b9a8d6"],["Oltin","#e0c284"],["Qizil","#b91c2b"]]
+  };
+  function samsungFamily(text){
+    var t = (text||"").toUpperCase();
+    if(/Z\s?FOLD/.test(t)) return "zfold";
+    if(/Z\s?FLIP/.test(t)) return "zflip";
+    if(/NOTE/.test(t)) return "note";
+    if(/TAB/.test(t)) return "tab";
+    if(/\bS\s?\d/.test(t)) return "s";
+    if(/\bA\s?\d/.test(t)) return "a";
+    if(/\bM\s?\d/.test(t)) return "m";
+    return "generic";
+  }
 
   /* ====================== helpers ====================== */
   function esc(s){
@@ -583,6 +750,13 @@
     if(s==="" || isNaN(Number(s))) return null;
     return Number(s);
   }
+  function formatImei(raw){
+    var d = String(raw||"").replace(/\D/g,"").slice(0,15);
+    var parts = [];
+    for(var i=0;i<10 && i<d.length;i+=2) parts.push(d.slice(i,i+2));
+    if(d.length>10) parts.push(d.slice(10));
+    return parts.join("-");
+  }
   async function saveFile(filename, blobOrData, mime){
     if(window.claude && window.claude.use){
       try{
@@ -647,7 +821,7 @@
     phonesCol = db.collection("phones");
     notesDoc = db.collection("meta").doc("notes");
 
-    phonesCol.orderBy("seq","desc").limit(2000).onSnapshot(function(snap){
+    phonesCol.orderBy("seq","desc").limit(3000).onSnapshot(function(snap){
       state.phones = snap.docs.map(function(d){
         var v = Object.assign({}, d.data()||{});
         v.id = d.id;
@@ -668,7 +842,7 @@
     });
   }
 
-  /* ====================== section shell (per brand) ====================== */
+  /* ====================== section shell (per brand) - excel-style table, no pagination, no price ====================== */
   function sectionShellHTML(brand){
     return ''+
       '<div class="page-intro">'+
@@ -677,25 +851,11 @@
       '</div>'+
       '<div class="toolbar">'+
         '<button class="btn primary lg" id="addBtn-'+brand+'">+ Yangi telefon qo\'shish</button>'+
-        '<button class="btn lg" id="importBtn-'+brand+'">'+
-          '<svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 21V9m0 0l-4 4m4-4l4 4M4 3h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'+
-          'Fayldan yuklash'+
-        '</button>'+
-        '<div class="export-wrap">'+
-          '<button class="btn lg" id="exportBtn-'+brand+'">'+
-            '<svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 21h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'+
-            'Yuklab olish'+
-          '</button>'+
-          '<div class="export-menu" id="exportMenu-'+brand+'">'+
-            '<button id="exportCsv-'+brand+'">Excel jadval (.csv) sifatida</button>'+
-            '<button id="exportXlsx-'+brand+'">Excel fayl (.xlsx) sifatida</button>'+
-          '</div>'+
-        '</div>'+
       '</div>'+
       '<div class="toolbar">'+
         '<div class="search-box">'+
           '<svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>'+
-          '<input type="text" id="search-'+brand+'" placeholder="Qidirish: model, ism yoki telefon raqami…">'+
+          '<input type="text" id="search-'+brand+'" placeholder="Qidirish: model yoki ism…">'+
         '</div>'+
         '<div class="chip-row" id="chips-'+brand+'">'+
           '<button class="chip active" data-status="all">Hammasi</button>'+
@@ -709,19 +869,19 @@
         '<div class="table-scroll">'+
           '<table id="table-'+brand+'">'+
             '<thead><tr>'+
+              '<th class="rownum">#</th>'+
               '<th data-sort="model">Model</th>'+
               '<th data-sort="imei">IMEI</th>'+
               '<th data-sort="status">Holati</th>'+
               '<th data-sort="buyDate">Sotib olindi</th>'+
               '<th data-sort="sellDate">Sotildi</th>'+
-              '<th data-sort="profit">Foyda</th>'+
               '<th></th>'+
             '</tr></thead>'+
             '<tbody id="tbody-'+brand+'"></tbody>'+
           '</table>'+
         '</div>'+
       '</div>'+
-      '<div class="pager" id="pager-'+brand+'"></div>';
+      '<div class="pager" id="pager-'+brand+'" style="padding:14px 0 0; text-align:center; font-size:12.5px; color:var(--ink-faint);"></div>';
   }
 
   function filteredPhones(brand){
@@ -736,49 +896,28 @@
         });
       });
     }
-    var key = st.sortKey, dir = st.sortDir==="asc"?1:-1;
-    list.sort(function(a,b){
-      var av, bv;
-      if(key==="profit"){ av=profitOf(a); bv=profitOf(b); }
-      else { av=a[key]; bv=b[key]; }
-      if(av==null && bv==null) return 0;
-      if(av==null) return 1;
-      if(bv==null) return -1;
-      if(typeof av==="string") return av.localeCompare(bv)*dir;
-      return (av-bv)*dir;
-    });
+    list.sort(function(a,b){ return (b.seq||0)-(a.seq||0); });
     return list;
   }
 
   function renderSection(brand){
-    var st = state.sec[brand];
     var list = filteredPhones(brand);
-    var totalPages = Math.max(1, Math.ceil(list.length/state.pageSize));
-    if(st.page>totalPages) st.page = totalPages;
-    var startIdx = (st.page-1)*state.pageSize;
-    var pageItems = list.slice(startIdx, startIdx+state.pageSize);
-
     var tbody = document.getElementById("tbody-"+brand);
     if(!tbody) return;
-    if(!pageItems.length){
+    if(!list.length){
       tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state">Hech narsa topilmadi</div></td></tr>';
     } else {
-      tbody.innerHTML = pageItems.map(function(p){
-        var pr = profitOf(p);
-        var prCls = pr==null ? "" : (pr>0?"profit-pos":(pr<0?"profit-neg":"profit-zero"));
-        var prText = pr==null ? "—" : fmtMoney(pr);
+      tbody.innerHTML = list.map(function(p, i){
         return '<tr>'+
+          '<td class="rownum">'+(i+1)+'</td>'+
           '<td>'+
-            '<div class="card-top">'+
-              '<div><div class="cell-model">'+esc(p.model||"Nomsiz")+'</div>'+
-              '<div class="cell-sub">'+esc(p.source||"")+'</div></div>'+
-            '</div>'+
+            '<div class="cell-model">'+esc(p.model||"Nomsiz")+'</div>'+
+            '<div class="cell-sub">'+esc(p.source||"")+'</div>'+
           '</td>'+
-          '<td data-row><span class="mlabel">IMEI</span><span class="mono">'+esc(p.imei||"—")+'</span></td>'+
-          '<td data-row><span class="mlabel">Holati</span><span class="badge '+p.status+'">'+statusLabel(p.status)+'</span></td>'+
-          '<td data-row><span class="mlabel">Sotib olindi</span><span>'+esc(fmtDate(p.buyDate))+(p.buyPrice!=null?' · <span class="mono">'+fmtMoney(p.buyPrice)+'</span>':'')+'</span></td>'+
-          '<td data-row><span class="mlabel">Sotildi</span><span>'+esc(fmtDate(p.sellDate))+(p.buyer?' · '+esc(p.buyer):'')+'</span></td>'+
-          '<td data-row><span class="mlabel">Foyda</span><span class="'+prCls+' mono">'+prText+'</span></td>'+
+          '<td class="mono">'+esc(p.imei||"—")+'</td>'+
+          '<td><span class="badge '+p.status+'">'+statusLabel(p.status)+'</span></td>'+
+          '<td>'+esc(fmtDate(p.buyDate))+'</td>'+
+          '<td>'+esc(fmtDate(p.sellDate))+(p.buyer?'<div class="cell-sub">'+esc(p.buyer)+'</div>':'')+'</td>'+
           '<td><div class="row-actions">'+
             '<button class="btn sm ghost" data-edit="'+p.id+'" data-brand="'+brand+'">Tahrir</button>'+
             '<button class="btn sm ghost" data-del="'+p.id+'" style="color:var(--danger)">O\'chirish</button>'+
@@ -787,24 +926,7 @@
       }).join("");
     }
 
-    var pager = document.getElementById("pager-"+brand);
-    if(list.length>state.pageSize){
-      pager.innerHTML = '<button class="btn sm" data-prev>&larr; Oldingi</button>'+
-        '<span>'+st.page+' / '+totalPages+' ('+list.length+' ta)</span>'+
-        '<button class="btn sm" data-next>Keyingi &rarr;</button>';
-      var prevBtn = pager.querySelector("[data-prev]"), nextBtn = pager.querySelector("[data-next]");
-      prevBtn.disabled = st.page<=1;
-      nextBtn.disabled = st.page>=totalPages;
-      prevBtn.onclick = function(){ st.page--; renderSection(brand); };
-      nextBtn.onclick = function(){ st.page++; renderSection(brand); };
-    } else {
-      pager.innerHTML = list.length ? ('<span>Jami: '+list.length+' ta</span>') : "";
-    }
-
-    document.querySelectorAll("#table-"+brand+" thead th[data-sort]").forEach(function(th){
-      var key = th.getAttribute("data-sort");
-      th.innerHTML = th.textContent.replace(/\s*[▲▼]$/,"") + (st.sortKey===key ? ' <span class="arrow">'+(st.sortDir==="asc"?"▲":"▼")+'</span>' : "");
-    });
+    document.getElementById("pager-"+brand).textContent = list.length ? ("Jami: "+list.length+" ta") : "";
 
     tbody.querySelectorAll("[data-edit]").forEach(function(btn){
       btn.onclick = function(){ openPhoneModal(btn.getAttribute("data-edit"), btn.getAttribute("data-brand")); };
@@ -819,7 +941,7 @@
 
   function bindSection(brand){
     document.getElementById("search-"+brand).addEventListener("input", function(e){
-      state.sec[brand].search = e.target.value; state.sec[brand].page = 1; renderSection(brand);
+      state.sec[brand].search = e.target.value; renderSection(brand);
     });
     document.getElementById("chips-"+brand).addEventListener("click", function(e){
       var chip = e.target.closest(".chip");
@@ -827,39 +949,78 @@
       this.querySelectorAll(".chip").forEach(function(c){ c.classList.remove("active"); });
       chip.classList.add("active");
       state.sec[brand].status = chip.getAttribute("data-status");
-      state.sec[brand].page = 1;
-      renderSection(brand);
-    });
-    document.querySelector("#table-"+brand+" thead").addEventListener("click", function(e){
-      var th = e.target.closest("th[data-sort]");
-      if(!th) return;
-      var key = th.getAttribute("data-sort");
-      var st = state.sec[brand];
-      if(st.sortKey===key) st.sortDir = st.sortDir==="asc"?"desc":"asc";
-      else { st.sortKey = key; st.sortDir = "asc"; }
       renderSection(brand);
     });
     document.getElementById("addBtn-"+brand).addEventListener("click", function(){ openPhoneModal(null, brand); });
-    document.getElementById("importBtn-"+brand).addEventListener("click", openImportModal);
-
-    document.getElementById("exportBtn-"+brand).addEventListener("click", function(e){
-      e.stopPropagation();
-      document.getElementById("exportMenu-"+brand).classList.toggle("open");
-    });
-    document.getElementById("exportCsv-"+brand).addEventListener("click", function(e){
-      e.stopPropagation(); doExport(brand, "csv"); document.getElementById("exportMenu-"+brand).classList.remove("open");
-    });
-    document.getElementById("exportXlsx-"+brand).addEventListener("click", function(e){
-      e.stopPropagation(); doExport(brand, "xlsx"); document.getElementById("exportMenu-"+brand).classList.remove("open");
-    });
   }
 
-  /* ====================== dashboard ====================== */
+  /* ====================== dashboard (public, no money figures) ====================== */
   function renderDashboard(){
     var all = state.phones;
     var sold = all.filter(function(p){return p.status==="sold";});
     var stock = all.filter(function(p){return p.status==="stock";});
     var lent = all.filter(function(p){return p.status==="lent";});
+    var lost = all.filter(function(p){return p.status==="lost";});
+
+    var kpis = [
+      {label:"Jami telefonlar", value:all.length+" dona", cls:"", sub:"Barcha bo'limlar bo'yicha"},
+      {label:"Sotilgan", value:sold.length+" dona", cls:"success", sub:"Jami sotilgan telefonlar"},
+      {label:"Omborda qolgan", value:stock.length+" dona", cls:"", sub:"Hali sotilmagan"},
+      {label:"Band / berilgan", value:lent.length+" dona", cls:"gold", sub:"Vaqtincha berilgan"},
+      {label:"Yo'qolgan", value:lost.length+" dona", cls:lost.length?"danger":"", sub:lost.length?"E'tibor bering":"Yo'q, hammasi joyida"}
+    ];
+    document.getElementById("kpiGrid").innerHTML = kpis.map(function(k){
+      return '<div class="kpi"><div class="kpi-label">'+esc(k.label)+'</div>'+
+        '<div class="kpi-value '+k.cls+'">'+esc(k.value)+'</div>'+
+        '<div class="kpi-sub">'+esc(k.sub)+'</div></div>';
+    }).join("");
+
+    document.getElementById("brandRow").innerHTML = BRANDS.map(function(b){
+      var bl = all.filter(function(p){return p.brand===b;});
+      return '<div class="brand-card" data-goto="'+b+'">'+
+        '<div class="brand-icon '+b+'">'+BRAND_LABEL[b].slice(0,2).toUpperCase()+'</div>'+
+        '<div><div class="brand-card-name">'+BRAND_LABEL[b]+'</div>'+
+        '<div class="brand-card-meta">'+bl.filter(function(p){return p.status==="stock";}).length+' ta omborda</div></div>'+
+        '<div class="brand-card-count"><div class="v">'+bl.length+'</div><div class="l">Jami dona</div></div>'+
+        '</div>';
+    }).join("");
+    document.querySelectorAll("[data-goto]").forEach(function(el){
+      el.onclick = function(){ switchTab(el.getAttribute("data-goto")); };
+    });
+
+    var byMonth = {};
+    all.forEach(function(p){
+      var mk = monthKey(p.buyDate);
+      if(!mk) return;
+      if(!byMonth[mk]) byMonth[mk] = {count:0};
+      byMonth[mk].count++;
+    });
+    var months = Object.keys(byMonth).sort().slice(-6);
+    var maxCount = Math.max.apply(null, months.map(function(m){return byMonth[m].count;}).concat([1]));
+    document.getElementById("chartBox").innerHTML = months.length ? months.map(function(m){
+      var d = byMonth[m];
+      var hC = Math.max(3, Math.round(d.count/maxCount*100));
+      var p = m.split("-");
+      var label = (MONTHS[parseInt(p[1],10)-1]||p[1])+" "+p[0].slice(2);
+      return '<div class="col"><div class="bar-wrap">'+
+        '<div class="bar" style="height:'+hC+'px" title="'+d.count+' dona"></div>'+
+        '</div><div class="col-label">'+esc(label)+'</div></div>';
+    }).join("") : '<div class="empty-state" style="padding:20px">Ma\'lumot yo\'q</div>';
+
+    var recent = all.slice().sort(function(a,b){ return (b.seq||0)-(a.seq||0); }).slice(0,6);
+    document.getElementById("recentList").innerHTML = recent.length ? recent.map(function(p){
+      return '<div class="recent-item"><span class="brandtag '+p.brand+'">'+BRAND_LABEL[p.brand]+'</span><span class="badge '+p.status+'">'+statusLabel(p.status)+'</span>'+
+        '<span class="recent-model">'+esc(p.model||"Nomsiz")+'</span>'+
+        '<span class="recent-date">'+esc(fmtDate(p.buyDate))+'</span></div>';
+    }).join("") : '<div class="empty-state">Hali telefon qo\'shilmagan</div>';
+  }
+
+  /* ====================== finance (password gated) ====================== */
+  function renderFinance(){
+    if(!state.financeUnlocked) return;
+    var all = state.phones;
+    var sold = all.filter(function(p){return p.status==="sold";});
+    var stock = all.filter(function(p){return p.status==="stock";});
     var lost = all.filter(function(p){return p.status==="lost";});
 
     var totalProfit = sold.reduce(function(s,p){ var pr=profitOf(p); return s+(pr||0); },0);
@@ -873,30 +1034,14 @@
       {label:"Sof foyda", value:fmtMoney(totalProfit), cls:totalProfit>=0?"success":"danger", sub:sold.length+" ta telefon sotilgan"},
       {label:"Jami sotuv summasi", value:fmtMoney(totalRevenue), cls:"", sub:"Sotilgan telefonlardan tushgan pul"},
       {label:"Foyda foizi", value:margin.toFixed(1)+"%", cls:"gold", sub:"Har $100 xarajatdan qancha foyda"},
-      {label:"Omborda qolgan", value:stock.length+" dona", cls:"", sub:fmtMoney(capitalInStock)+" qiymatida"},
-      {label:"Band / berilgan", value:lent.length+" dona", cls:"", sub:"Hali pul olinmagan"},
-      {label:"Yo'qolgan", value:lost.length+" dona", cls:lost.length?"danger":"", sub:lostValue?fmtMoney(lostValue)+" zarar":"Yo'q, hammasi joyida"}
+      {label:"Omborda qiymati", value:fmtMoney(capitalInStock), cls:"", sub:stock.length+" ta telefon"},
+      {label:"Yo'qolgan zarar", value:lostValue?fmtMoney(lostValue):"$0", cls:lostValue?"danger":"", sub:lost.length+" ta telefon"}
     ];
-    document.getElementById("kpiGrid").innerHTML = kpis.map(function(k){
+    document.getElementById("finKpiGrid").innerHTML = kpis.map(function(k){
       return '<div class="kpi"><div class="kpi-label">'+esc(k.label)+'</div>'+
         '<div class="kpi-value '+k.cls+'">'+esc(k.value)+'</div>'+
         '<div class="kpi-sub">'+esc(k.sub)+'</div></div>';
     }).join("");
-
-    document.getElementById("brandRow").innerHTML = BRANDS.map(function(b){
-      var bl = all.filter(function(p){return p.brand===b;});
-      var bsold = bl.filter(function(p){return p.status==="sold";});
-      var bprofit = bsold.reduce(function(s,p){ var pr=profitOf(p); return s+(pr||0); },0);
-      return '<div class="brand-card" data-goto="'+b+'">'+
-        '<div class="brand-icon '+b+'">'+BRAND_LABEL[b].slice(0,2).toUpperCase()+'</div>'+
-        '<div><div class="brand-card-name">'+BRAND_LABEL[b]+'</div>'+
-        '<div class="brand-card-meta">'+bl.length+' ta yozuv</div></div>'+
-        '<div class="brand-card-profit"><div class="v">'+fmtMoney(bprofit)+'</div><div class="l">Foyda</div></div>'+
-        '</div>';
-    }).join("");
-    document.querySelectorAll("[data-goto]").forEach(function(el){
-      el.onclick = function(){ switchTab(el.getAttribute("data-goto")); };
-    });
 
     var byMonth = {};
     all.forEach(function(p){
@@ -910,7 +1055,7 @@
     var months = Object.keys(byMonth).sort().slice(-6);
     var maxCount = Math.max.apply(null, months.map(function(m){return byMonth[m].count;}).concat([1]));
     var maxProfit = Math.max.apply(null, months.map(function(m){return Math.abs(byMonth[m].profit);}).concat([1]));
-    document.getElementById("chartBox").innerHTML = months.length ? months.map(function(m){
+    document.getElementById("finChartBox").innerHTML = months.length ? months.map(function(m){
       var d = byMonth[m];
       var hC = Math.max(3, Math.round(d.count/maxCount*100));
       var hP = Math.max(3, Math.round(Math.abs(d.profit)/maxProfit*100));
@@ -921,13 +1066,6 @@
         '<div class="bar profit" style="height:'+hP+'px" title="'+fmtMoney(d.profit)+'"></div>'+
         '</div><div class="col-label">'+esc(label)+'</div></div>';
     }).join("") : '<div class="empty-state" style="padding:20px">Ma\'lumot yo\'q</div>';
-
-    var recent = all.slice().sort(function(a,b){ return (b.seq||0)-(a.seq||0); }).slice(0,6);
-    document.getElementById("recentList").innerHTML = recent.length ? recent.map(function(p){
-      return '<div class="recent-item"><span class="brandtag '+p.brand+'">'+BRAND_LABEL[p.brand]+'</span><span class="badge '+p.status+'">'+statusLabel(p.status)+'</span>'+
-        '<span class="recent-model">'+esc(p.model||"Nomsiz")+'</span>'+
-        '<span class="recent-date">'+esc(fmtDate(p.buyDate))+'</span></div>';
-    }).join("") : '<div class="empty-state">Hali telefon qo\'shilmagan</div>';
 
     var srcMap = {};
     all.forEach(function(p){
@@ -961,12 +1099,13 @@
   function renderAll(){
     renderDashboard();
     BRANDS.forEach(renderSection);
+    renderFinance();
   }
 
   /* ====================== tabs ====================== */
   function switchTab(tab){
     document.querySelectorAll(".tab-btn").forEach(function(b){ b.classList.toggle("active", b.getAttribute("data-tab")===tab); });
-    ["dashboard","iphone","samsung","other"].forEach(function(t){
+    ["dashboard","iphone","samsung","other","finance"].forEach(function(t){
       document.getElementById("tab-"+t).classList.toggle("active", t===tab);
     });
   }
@@ -976,16 +1115,88 @@
     switchTab(btn.getAttribute("data-tab"));
   });
 
+  /* ====================== finance password gate ====================== */
+  function tryUnlockFinance(){
+    var val = document.getElementById("financePassword").value;
+    if(val === FINANCE_PASSWORD){
+      state.financeUnlocked = true;
+      document.getElementById("financeLock").hidden = true;
+      document.getElementById("financeContent").hidden = false;
+      renderFinance();
+    } else {
+      toast("Parol noto'g'ri", true);
+    }
+  }
+  document.getElementById("financeUnlockBtn").addEventListener("click", tryUnlockFinance);
+  document.getElementById("financePassword").addEventListener("keydown", function(e){ if(e.key==="Enter") tryUnlockFinance(); });
+
+  /* ====================== color swatch pickers ====================== */
+  var ipSelectedColor = null, otherSelectedColor = null;
+
+  function renderSwatches(containerId, labelId, list, selected, onPick){
+    var box = document.getElementById(containerId);
+    box.innerHTML = list.map(function(c){
+      return '<button type="button" class="swatch'+(selected===c[0]?' active':'')+'" style="background:'+c[1]+'" data-name="'+esc(c[0])+'" title="'+esc(c[0])+'"></button>';
+    }).join("");
+    box.querySelectorAll(".swatch").forEach(function(btn){
+      btn.onclick = function(){
+        box.querySelectorAll(".swatch").forEach(function(b){ b.classList.remove("active"); });
+        btn.classList.add("active");
+        onPick(btn.getAttribute("data-name"));
+        document.getElementById(labelId).innerHTML = "Tanlangan: <b>"+esc(btn.getAttribute("data-name"))+"</b>";
+      };
+    });
+    var lbl = document.getElementById(labelId);
+    lbl.innerHTML = selected ? ("Tanlangan: <b>"+esc(selected)+"</b>") : "";
+  }
+
+  function populateIphoneModels(selected){
+    var sel = document.getElementById("f_ip_model");
+    sel.innerHTML = IPHONE_MODELS.map(function(m){ return '<option'+(m===selected?' selected':'')+'>'+m+'</option>'; }).join("");
+  }
+  function refreshIphoneColors(){
+    var model = document.getElementById("f_ip_model").value;
+    var list = IPHONE_COLORS[model] || C_11;
+    if(!list.some(function(c){return c[0]===ipSelectedColor;})) ipSelectedColor = list[0][0];
+    renderSwatches("ip_colorSwatches", "ip_colorLabel", list, ipSelectedColor, function(name){ ipSelectedColor = name; });
+  }
+  function refreshOtherColors(brand){
+    var modelText = document.getElementById("f_other_model").value;
+    var list = brand==="samsung" ? (SAMSUNG_COLORS[samsungFamily(modelText)] || SAMSUNG_COLORS.generic) : SAMSUNG_COLORS.generic;
+    if(!list.some(function(c){return c[0]===otherSelectedColor;})) otherSelectedColor = null;
+    renderSwatches("other_colorSwatches", "other_colorLabel", list, otherSelectedColor, function(name){ otherSelectedColor = name; });
+  }
+  document.getElementById("f_ip_model").addEventListener("change", refreshIphoneColors);
+  document.getElementById("f_other_model").addEventListener("input", function(){ refreshOtherColors(document.getElementById("f_brand").value); });
+
+  function togglePickerByBrand(){
+    var brand = document.getElementById("f_brand").value;
+    document.getElementById("iphonePicker").hidden = brand!=="iphone";
+    document.getElementById("otherPicker").hidden = brand==="iphone";
+    if(brand==="iphone"){ refreshIphoneColors(); }
+    else { refreshOtherColors(brand); }
+  }
+  document.getElementById("f_brand").addEventListener("change", togglePickerByBrand);
+
+  document.getElementById("f_imei").addEventListener("input", function(e){
+    var pos = e.target.selectionStart;
+    var before = e.target.value.length;
+    e.target.value = formatImei(e.target.value);
+    var after = e.target.value.length;
+    try{ e.target.selectionStart = e.target.selectionEnd = Math.max(0, pos + (after-before)); }catch(err){}
+  });
+
   /* ====================== add/edit modal ====================== */
   function openPhoneModal(id, brand){
     state.editingId = id || null;
     state.editingBrand = brand || "iphone";
     var p = id ? state.phones.find(function(x){return x.id===id;}) : null;
     document.getElementById("modalTitle").textContent = id ? "Telefonni tahrirlash" : "Yangi "+BRAND_LABEL[state.editingBrand];
-    document.getElementById("f_model").value = p ? (p.model||"") : "";
-    document.getElementById("f_brand").value = p ? (p.brand||state.editingBrand) : state.editingBrand;
-    document.getElementById("f_imei").value = p ? (p.imei||"") : "";
+
+    var useBrand = p ? (p.brand||state.editingBrand) : state.editingBrand;
+    document.getElementById("f_brand").value = useBrand;
     document.getElementById("f_status").value = p ? (p.status||"stock") : "stock";
+    document.getElementById("f_imei").value = p ? (p.imei||"") : "";
     document.getElementById("f_imeiBox").value = p && p.imeiBox ? "1" : "0";
     document.getElementById("f_source").value = p ? (p.source||"") : "";
     document.getElementById("f_sourcePhone").value = p ? (p.sourcePhone||"") : "";
@@ -996,20 +1207,56 @@
     document.getElementById("f_sellDate").value = p ? (p.sellDate||"") : "";
     document.getElementById("f_sellPrice").value = p && p.sellPrice!=null ? p.sellPrice : "";
     document.getElementById("f_note").value = p ? (p.note||"") : "";
+
+    populateIphoneModels(null);
+    ipSelectedColor = null; otherSelectedColor = null;
+    document.getElementById("f_ip_memory").value = "256GB";
+    document.getElementById("f_ip_battery").value = "";
+    document.getElementById("f_ip_region").value = "";
+    document.getElementById("f_other_model").value = p && useBrand!=="iphone" ? (p.model||"") : "";
+
+    if(p && useBrand==="iphone" && p.model){
+      var parts = p.model.split(" - ");
+      if(parts.length>=5){
+        populateIphoneModels(parts[0]);
+        ipSelectedColor = parts[1];
+        document.getElementById("f_ip_memory").value = parts[2];
+        document.getElementById("f_ip_battery").value = parseInt(parts[3],10) || "";
+        document.getElementById("f_ip_region").value = parts[4];
+      }
+    }
+
+    togglePickerByBrand();
     document.getElementById("phoneOverlay").classList.add("open");
-    document.getElementById("f_model").focus();
   }
   function closePhoneModal(){
     document.getElementById("phoneOverlay").classList.remove("open");
     state.editingId = null;
   }
+  function buildModelString(brand){
+    if(brand==="iphone"){
+      var modelName = document.getElementById("f_ip_model").value;
+      var color = ipSelectedColor || "";
+      var mem = document.getElementById("f_ip_memory").value;
+      var batt = document.getElementById("f_ip_battery").value;
+      var region = document.getElementById("f_ip_region").value.trim();
+      var parts = [modelName, color, mem, (batt?batt+"%":""), region].filter(function(x){return x;});
+      return parts.join(" - ");
+    }
+    var base = document.getElementById("f_other_model").value.trim();
+    if(otherSelectedColor) base = base ? (base+" - "+otherSelectedColor) : otherSelectedColor;
+    return base;
+  }
   async function savePhone(ev){
     ev.preventDefault();
     if(!phonesCol){ toast("Firebase ulanmagan", true); return; }
     var num = function(v){ v = v.trim(); if(v==="") return null; var n = Number(v); return isNaN(n)?null:n; };
+    var brand = document.getElementById("f_brand").value;
+    var model = buildModelString(brand);
+    if(!model){ toast("Telefon nomini kiriting", true); return; }
     var data = {
-      model: document.getElementById("f_model").value.trim(),
-      brand: document.getElementById("f_brand").value,
+      model: model,
+      brand: brand,
       imei: document.getElementById("f_imei").value.trim(),
       status: document.getElementById("f_status").value,
       imeiBox: document.getElementById("f_imeiBox").value === "1",
@@ -1040,34 +1287,42 @@
     }catch(e){
       toast("Saqlashda xatolik: "+(e.code||e.message||"noma'lum"), true);
     }
-    saveBtn.disabled = false; saveBtn.textContent = "Saqlash";
+    saveBtn.disabled = false; saveBtn.textContent = "✓ Saqlash";
   }
 
   /* ====================== delete confirm ====================== */
+  var confirmAction = null;
   function openConfirm(id){
     state.deleteId = id;
+    confirmAction = "delete-phone";
     var p = state.phones.find(function(x){return x.id===id;});
+    document.getElementById("confirmTitle").textContent = "O'chirishni tasdiqlang";
     document.getElementById("confirmText").textContent = "\""+((p&&p.model)||"Ushbu yozuv")+"\" o'chiriladi. Bu amalni qaytarib bo'lmaydi.";
     document.getElementById("confirmOverlay").classList.add("open");
   }
   function closeConfirm(){
     document.getElementById("confirmOverlay").classList.remove("open");
-    state.deleteId = null;
+    state.deleteId = null; confirmAction = null;
   }
-  async function doDelete(){
-    if(!state.deleteId || !phonesCol) return;
-    try{
-      await phonesCol.doc(state.deleteId).delete();
-      toast("O'chirildi");
-    }catch(e){
-      toast("O'chirishda xatolik", true);
+  async function doConfirm(){
+    if(confirmAction==="delete-phone"){
+      if(!state.deleteId || !phonesCol) return;
+      try{
+        await phonesCol.doc(state.deleteId).delete();
+        toast("O'chirildi");
+      }catch(e){ toast("O'chirishda xatolik", true); }
+      closeConfirm();
+    } else if(confirmAction==="new-month"){
+      closeConfirm();
+      await runNewMonth();
     }
-    closeConfirm();
   }
+  document.getElementById("confirmOk").addEventListener("click", doConfirm);
 
-  /* ====================== export ====================== */
+  /* ====================== export (with filename prompt) ====================== */
   function exportRows(brand){
-    var list = filteredPhones(brand);
+    var list = brand==="all" ? state.phones.slice() : state.phones.filter(function(p){ return p.brand===brand; });
+    list.sort(function(a,b){ return (b.seq||0)-(a.seq||0); });
     var header = ["Model","Brend","IMEI","Holati","Kimdan olindi","Tel(sotuvchi)","Sotib olingan sana","Sotib olingan narx",
       "Kimga sotildi","Tel(xaridor)","Sotilgan sana","Sotilgan narx","Foyda","Izoh"];
     var rows = list.map(function(p){
@@ -1078,29 +1333,84 @@
     });
     return {header:header, rows:rows};
   }
-  async function doExport(brand, fmt){
+  function xlsxBlobFor(brand){
     var d = exportRows(brand);
-    var fname = brand+"-telefonlar."+fmt;
-    if(fmt==="csv"){
-      var lines = [d.header].concat(d.rows).map(function(row){
-        return row.map(function(v){
-          var s = String(v);
-          if(/[",\n]/.test(s)) s = '"'+s.replace(/"/g,'""')+'"';
-          return s;
-        }).join(",");
-      });
-      var csv = "﻿" + lines.join("\r\n");
-      var ok = await saveFile(fname, new Blob([csv],{type:"text/csv"}));
-      if(ok) toast("CSV fayl saqlandi"); else toast("Eksportda xatolik", true);
-    } else {
-      if(!window.XLSX){ toast("Excel kutubxonasi yuklanmadi", true); return; }
-      var ws = XLSX.utils.aoa_to_sheet([d.header].concat(d.rows));
-      ws["!cols"] = d.header.map(function(){ return {wch:16}; });
-      var wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, BRAND_LABEL[brand]);
-      var out = XLSX.write(wb, {bookType:"xlsx", type:"array"});
-      var ok = await saveFile(fname, new Blob([out]));
-      if(ok) toast("Excel fayl saqlandi"); else toast("Eksportda xatolik", true);
+    var ws = XLSX.utils.aoa_to_sheet([d.header].concat(d.rows));
+    ws["!cols"] = d.header.map(function(){ return {wch:16}; });
+    var wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, brand==="all"?"Barchasi":BRAND_LABEL[brand]);
+    var out = XLSX.write(wb, {bookType:"xlsx", type:"array"});
+    return new Blob([out]);
+  }
+  function askFilenameAndExport(brand){
+    var d = new Date();
+    var stamp = d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+    var suggested = (brand==="all"?"ombor-barchasi":"ombor-"+brand)+"-"+stamp;
+    document.getElementById("filenameInput").value = suggested;
+    state.pendingExport = brand;
+    document.getElementById("filenameOverlay").classList.add("open");
+    document.getElementById("filenameInput").focus();
+    document.getElementById("filenameInput").select();
+  }
+  async function confirmFilenameExport(){
+    var brand = state.pendingExport;
+    if(!brand) return;
+    var name = document.getElementById("filenameInput").value.trim() || "ombor-export";
+    if(!/\.xlsx$/i.test(name)) name += ".xlsx";
+    document.getElementById("filenameOverlay").classList.remove("open");
+    var blob = xlsxBlobFor(brand);
+    var ok = await saveFile(name, blob);
+    toast(ok ? "Fayl saqlandi" : "Eksportda xatolik", !ok);
+    return ok;
+  }
+  document.getElementById("filenameOk").addEventListener("click", confirmFilenameExport);
+  document.getElementById("filenameCancel").addEventListener("click", function(){
+    document.getElementById("filenameOverlay").classList.remove("open");
+    state.pendingExport = null;
+  });
+
+  document.getElementById("finExportBtn").addEventListener("click", function(e){
+    e.stopPropagation();
+    document.getElementById("finExportMenu").classList.toggle("open");
+  });
+  document.querySelectorAll("#finExportMenu button").forEach(function(btn){
+    btn.addEventListener("click", function(e){
+      e.stopPropagation();
+      document.getElementById("finExportMenu").classList.remove("open");
+      askFilenameAndExport(btn.getAttribute("data-brand"));
+    });
+  });
+  document.addEventListener("click", function(){ document.getElementById("finExportMenu").classList.remove("open"); });
+
+  /* ====================== monthly rollover ====================== */
+  function openNewMonthConfirm(){
+    var soldCount = state.phones.filter(function(p){return p.status==="sold";}).length;
+    var keepCount = state.phones.length - soldCount;
+    confirmAction = "new-month";
+    document.getElementById("confirmTitle").textContent = "Yangi oyni boshlash";
+    document.getElementById("confirmText").textContent =
+      "Avval barcha "+state.phones.length+" ta yozuv Excel faylga yuklab olinadi. Keyin "+soldCount+" ta SOTILGAN yozuv bazadan o'chiriladi. "+keepCount+" ta (omborda/band/yo'qolgan) telefon saqlanib qoladi. Davom etasizmi?";
+    document.getElementById("confirmOverlay").classList.add("open");
+  }
+  document.getElementById("newMonthBtn").addEventListener("click", openNewMonthConfirm);
+
+  async function runNewMonth(){
+    var d = new Date();
+    var stamp = d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0");
+    var blob = xlsxBlobFor("all");
+    var ok = await saveFile("ombor-arxiv-"+stamp+".xlsx", blob);
+    if(!ok){ toast("Arxivlashda xatolik, o'chirish bekor qilindi", true); return; }
+    var toDelete = state.phones.filter(function(p){ return p.status==="sold"; });
+    if(!toDelete.length){ toast("Sotilgan yozuv topilmadi, arxiv saqlandi"); return; }
+    try{
+      for(var i=0;i<toDelete.length;i+=400){
+        var batch = db.batch();
+        toDelete.slice(i,i+400).forEach(function(p){ batch.delete(phonesCol.doc(p.id)); });
+        await batch.commit();
+      }
+      toast(toDelete.length+" ta sotilgan yozuv arxivlandi va o'chirildi");
+    }catch(e){
+      toast("O'chirishda xatolik: "+(e.code||e.message), true);
     }
   }
 
@@ -1141,6 +1451,7 @@
   function closeImportModal(){
     document.getElementById("importOverlay").classList.remove("open");
   }
+  document.getElementById("finImportBtn").addEventListener("click", openImportModal);
 
   function colType(samples){
     var nonEmpty = samples.filter(function(v){ return v!==null && v!==undefined && String(v).trim()!==""; });
@@ -1348,7 +1659,7 @@
     }catch(e){
       toast("Import xatosi: "+(e.code||e.message), true);
     }
-    btn.disabled = false; btn.textContent = "Import qilish";
+    btn.disabled = false; btn.textContent = "✓ Ha, yuklash";
     progWrap.style.display = "none"; progBar.style.width = "0%";
   }
 
@@ -1361,7 +1672,6 @@
   document.getElementById("phoneForm").addEventListener("submit", savePhone);
 
   document.getElementById("confirmCancel").addEventListener("click", closeConfirm);
-  document.getElementById("confirmOk").addEventListener("click", doDelete);
   document.getElementById("confirmOverlay").addEventListener("click", function(e){ if(e.target.id==="confirmOverlay") closeConfirm(); });
 
   document.getElementById("closeImportModal").addEventListener("click", closeImportModal);
@@ -1373,10 +1683,8 @@
     el.hidden = !el.hidden;
     this.textContent = el.hidden ? "⚙️ Ustunlarni o'zim moslashtirmoqchiman" : "▲ Yashirish";
   });
+  document.getElementById("filenameOverlay").addEventListener("click", function(e){ if(e.target.id==="filenameOverlay"){ this.classList.remove("open"); state.pendingExport=null; } });
 
-  document.addEventListener("click", function(){
-    BRANDS.forEach(function(b){ var m = document.getElementById("exportMenu-"+b); if(m) m.classList.remove("open"); });
-  });
   document.addEventListener("keydown", function(e){
     if(e.key==="Escape"){ closePhoneModal(); closeConfirm(); closeImportModal(); }
   });
@@ -1386,6 +1694,7 @@
     document.getElementById("shell-"+b).innerHTML = sectionShellHTML(b);
   });
   BRANDS.forEach(bindSection);
+  populateIphoneModels(null);
 
   initFirebase();
   renderAll();
