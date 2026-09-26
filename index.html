@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Ombor</title>
+<title>VipMobile</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -242,6 +242,8 @@
   .form-grid .full{ grid-column:1/-1; }
   @media (max-width:480px){ .form-grid{ grid-template-columns:1fr; } }
   .field label{ display:block; font-size:12.5px; font-weight:700; color:var(--ink-dim); margin-bottom:6px; }
+  .status-hint{ font-size:11.5px; color:var(--ink-faint); margin-top:5px; line-height:1.4; }
+  .status-hint.gold{ color:var(--gold); }
   .field input, .field select, .field textarea{
     width:100%; padding:11px 12px; border-radius:9px; border:1px solid var(--border); background:var(--surface-2);
     color:var(--ink); font:inherit; font-size:14.5px;
@@ -412,7 +414,12 @@
               <div class="card">
                 <h3>Google Sheet bilan sinxronlash <span id="sheetSyncStatus" class="hint"></span></h3>
                 <div id="sheetSyncBanner" class="setup-banner" style="margin-bottom:14px;"></div>
+                <div class="field" style="margin-bottom:12px;">
+                  <label>Apps Script Web App havolasi</label>
+                  <input type="text" id="sheetUrlInput" placeholder="https://script.google.com/macros/s/…/exec">
+                </div>
                 <div class="data-actions">
+                  <button class="btn lg primary" id="sheetUrlSaveBtn">Havolani saqlash</button>
                   <button class="btn lg" id="sheetFullSyncBtn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3M17 4v4h-4M7 20v-4h4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> <span class="btn-label">Sheetga to'liq sinxronlash</span></button>
                 </div>
                 <p style="font-size:12px; color:var(--ink-dim); margin-top:12px; line-height:1.6;">
@@ -456,6 +463,7 @@
             <option value="lost">Yo'qolgan / o'g'irlangan</option>
             <option value="sold">Sotilgan</option>
           </select>
+          <div class="status-hint" id="statusHint"></div>
         </div>
       </div>
 
@@ -649,10 +657,11 @@
     editingBrand: "iphone",
     deleteId: null,
     financeUnlocked: false,
-    pendingExport: null
+    pendingExport: null,
+    sheetSyncUrl: ""
   };
 
-  var db = null, auth = null, phonesCol = null, notesDoc = null;
+  var db = null, auth = null, phonesCol = null, notesDoc = null, sheetSyncDoc = null;
   var importParsed = null;
 
   /* ====================== iPhone / Samsung color + model data ====================== */
@@ -939,11 +948,12 @@
   }
 
   /* ====================== Google Sheet sync ====================== */
-  function sheetSyncReady(){ return !!SHEET_SYNC_URL; }
+  function activeSheetSyncUrl(){ return state.sheetSyncUrl || SHEET_SYNC_URL || ""; }
+  function sheetSyncReady(){ return !!activeSheetSyncUrl(); }
   function syncToSheet(action, id, data){
     if(!sheetSyncReady()) return;
     try{
-      fetch(SHEET_SYNC_URL, {
+      fetch(activeSheetSyncUrl(), {
         method: "POST",
         mode: "no-cors",
         headers: {"Content-Type":"text/plain;charset=utf-8"},
@@ -955,7 +965,9 @@
     var statusEl = document.getElementById("sheetSyncStatus");
     var bannerEl = document.getElementById("sheetSyncBanner");
     var btn = document.getElementById("sheetFullSyncBtn");
+    var input = document.getElementById("sheetUrlInput");
     if(!statusEl) return;
+    if(input && document.activeElement !== input) input.value = state.sheetSyncUrl || "";
     if(sheetSyncReady()){
       statusEl.textContent = "ulangan";
       bannerEl.hidden = true;
@@ -963,7 +975,7 @@
     } else {
       statusEl.textContent = "ulanmagan";
       bannerEl.hidden = false;
-      bannerEl.innerHTML = '<b>Google Sheet ulanmagan.</b> Ulash uchun Apps Script kerak (havolangiz "ko\'rish uchun ochiq" bo\'lsa ham, yozish uchun avtorizatsiya kerak bo\'ladi). Kerakli skript va qadamlarni so\'rang, keyin olingan Web App havolasini <code>SHEET_SYNC_URL</code> ga (index.html faylining boshida) joylashtiring.';
+      bannerEl.innerHTML = '<b>Google Sheet ulanmagan.</b> Ulash uchun Apps Script kerak (havolangiz "ko\'rish uchun ochiq" bo\'lsa ham, yozish uchun avtorizatsiya kerak bo\'ladi). Kerakli Web App havolasini pastdagi maydonga joylashtirib, "Havolani saqlash" tugmasini bosing.';
       if(btn) btn.disabled = true;
     }
   }
@@ -971,7 +983,7 @@
   async function bulkSyncToSheet(records){
     if(!sheetSyncReady()) return false;
     try{
-      await fetch(SHEET_SYNC_URL, {
+      await fetch(activeSheetSyncUrl(), {
         method: "POST",
         mode: "no-cors",
         headers: {"Content-Type":"text/plain;charset=utf-8"},
@@ -1023,6 +1035,7 @@
   function startListeners(){
     phonesCol = db.collection("phones");
     notesDoc = db.collection("meta").doc("notes");
+    sheetSyncDoc = db.collection("meta").doc("sheetSync");
 
     phonesCol.orderBy("seq","desc").limit(3000).onSnapshot(function(snap){
       state.phones = snap.docs.map(function(d){
@@ -1042,6 +1055,12 @@
       state.notes = (d && d.text) || "";
       var field = document.getElementById("notesField");
       if(document.activeElement !== field) field.value = state.notes;
+    });
+
+    sheetSyncDoc.onSnapshot(function(snap){
+      var d = snap.exists ? snap.data() : null;
+      state.sheetSyncUrl = (d && d.url) || "";
+      renderSheetSyncBanner();
     });
   }
 
@@ -1503,8 +1522,21 @@
   document.getElementById("f_other_model").addEventListener("input", function(){ refreshOtherColors(document.getElementById("f_brand").value); });
   document.getElementById("f_other_color").addEventListener("input", function(){ markActiveSwatch("other_colorSwatches", this.value); });
 
+  var STATUS_HINTS = {
+    lent: "Band — telefon sotilmagan va yo'qolmagan, birovga vaqtincha berilgan (masalan, ko'rish yoki sinab ko'rish uchun).",
+    lost: "Telefon yo'qolgan yoki o'g'irlangan — endi omborda yo'q va sotib bo'lmaydi.",
+    stock: "",
+    sold: ""
+  };
+  function refreshStatusHint(){
+    var val = document.getElementById("f_status").value;
+    var hint = document.getElementById("statusHint");
+    hint.textContent = STATUS_HINTS[val] || "";
+    hint.classList.toggle("gold", val==="lent");
+  }
   function toggleSoldBlock(){
     document.getElementById("soldBlock").hidden = document.getElementById("f_status").value !== "sold";
+    refreshStatusHint();
   }
   document.getElementById("f_status").addEventListener("change", toggleSoldBlock);
 
@@ -1809,6 +1841,20 @@
     document.getElementById("confirmOverlay").classList.add("open");
   }
   document.getElementById("newMonthBtn").addEventListener("click", openNewMonthConfirm);
+  document.getElementById("sheetUrlSaveBtn").addEventListener("click", async function(){
+    if(!sheetSyncDoc){ toast("Firebase ulanmagan", true); return; }
+    var val = document.getElementById("sheetUrlInput").value.trim();
+    if(val && val.indexOf("http")!==0){ toast("Havola noto'g'ri ko'rinadi", true); return; }
+    var btn = this;
+    btn.disabled = true;
+    try{
+      await sheetSyncDoc.set({url: val, updatedAt: new Date().toISOString()});
+      toast(val ? "Havola saqlandi" : "Havola tozalandi");
+    }catch(e){
+      toast("Saqlashda xatolik: "+(e.code||e.message), true);
+    }
+    btn.disabled = false;
+  });
   document.getElementById("sheetFullSyncBtn").addEventListener("click", async function(){
     if(!sheetSyncReady()){ toast("Avval Sheet ulanishi kerak", true); return; }
     var btn = this;
