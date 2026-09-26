@@ -220,9 +220,11 @@
   .cell-sub{ color:var(--ink-faint); font-size:11.5px; margin-top:2px; }
   .row-actions{ display:flex; gap:6px; }
   .table-scroll{ overflow-x:auto; }
-  tr.group-row td{ background:var(--surface-2); font-weight:800; font-size:12px; color:var(--ink-dim); padding:7px 12px; letter-spacing:.02em; }
-  tr.group-row td span{ font-weight:600; color:var(--ink-faint); }
-  tr.sold-divider td{ background:var(--bg); font-weight:800; font-size:12px; color:var(--ink-faint); padding:10px 12px; text-transform:uppercase; letter-spacing:.04em; text-align:center; }
+  tr.group-row td{ background:var(--accent-soft); border-top:2px solid var(--accent); font-weight:800; font-size:15px; color:var(--ink); padding:10px 12px; letter-spacing:.01em; }
+  tr.group-row td span{ font-weight:600; font-size:12.5px; color:var(--accent); }
+  tr.tier-divider td{ background:var(--bg); font-weight:800; font-size:12.5px; color:var(--ink-faint); padding:12px; text-transform:uppercase; letter-spacing:.04em; text-align:center; border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
+  .price-tag{ color:var(--gold); font-weight:800; font-size:13.5px; }
+  .buyer-name{ font-weight:700; color:var(--ink); }
 
   .overlay{
     position:fixed; inset:0; background:rgba(3,6,16,.6); display:none; align-items:flex-start; justify-content:center;
@@ -314,17 +316,17 @@
         </svg>
       </div>
       <div>
-        <div class="brand-name">Ombor</div>
+        <div class="brand-name">VipMobile</div>
         <div class="brand-sub">Telefon savdo boshqaruvi</div>
       </div>
     </div>
     <nav class="tabs" id="tabNav">
-      <button class="tab-btn active" data-tab="dashboard">🏠 <span>Bosh sahifa</span></button>
-      <button class="tab-btn" data-tab="iphone">📱 <span>iPhone</span> <span class="tab-count" id="count-iphone">0</span></button>
-      <button class="tab-btn" data-tab="samsung">📱 <span>Samsung</span> <span class="tab-count" id="count-samsung">0</span></button>
-      <button class="tab-btn" data-tab="other">📦 <span>Boshqa</span> <span class="tab-count" id="count-other">0</span></button>
+      <button class="tab-btn active" data-tab="dashboard"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> <span>Bosh sahifa</span></button>
+      <button class="tab-btn" data-tab="iphone"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="7" y="2" width="10" height="20" rx="2" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="18" r="1" fill="currentColor"/></svg> <span>iPhone</span> <span class="tab-count" id="count-iphone">0</span></button>
+      <button class="tab-btn" data-tab="samsung"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="7" y="2" width="10" height="20" rx="2" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="18" r="1" fill="currentColor"/></svg> <span>Samsung</span> <span class="tab-count" id="count-samsung">0</span></button>
+      <button class="tab-btn" data-tab="other"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M3 8l9-5 9 5-9 5-9-5z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M3 8v9l9 5 9-5V8M12 13v9" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg> <span>Boshqa</span> <span class="tab-count" id="count-other">0</span></button>
       <div class="nav-divider"></div>
-      <button class="tab-btn" data-tab="finance">🔒 <span>Moliya</span></button>
+      <button class="tab-btn" data-tab="finance"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="5" y="11" width="14" height="9" rx="2" stroke="currentColor" stroke-width="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4" stroke="currentColor" stroke-width="2"/></svg> <span>Moliya</span></button>
     </nav>
     <div class="sidebar-foot">
       <div class="status-wrap"><span class="status-dot" id="statusDot"></span><span id="statusText">Ulanmoqda…</span></div>
@@ -336,10 +338,6 @@
 
       <section id="tab-dashboard" class="active">
         <div id="setupBanner" class="setup-banner" hidden></div>
-        <div class="page-intro">
-          <h1>Salom! 👋</h1>
-          <p>Bu yerda barcha telefonlaringiz ko'rinadi. Yangi telefon qo'shish uchun chapdan <b>iPhone</b>, <b>Samsung</b> yoki <b>Boshqa</b> bo'limini tanlang.</p>
-        </div>
         <div class="kpi-grid" id="kpiGrid"></div>
         <div class="brand-row" id="brandRow"></div>
         <div class="panel-grid">
@@ -370,7 +368,7 @@
       <section id="tab-finance">
         <div id="financeLock" class="lock-wrap">
           <div class="lock-card">
-            <div class="icon">🔒</div>
+            <div class="icon"><svg width="34" height="34" viewBox="0 0 24 24" fill="none"><rect x="5" y="11" width="14" height="9" rx="2" stroke="var(--gold)" stroke-width="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4" stroke="var(--gold)" stroke-width="2"/></svg></div>
             <h2>Moliyaviy hisobot</h2>
             <p>Foyda, savdo summasi va eksport/import shu yerda. Davom etish uchun parolni kiriting.</p>
             <input type="password" id="financePassword" placeholder="Parol">
@@ -379,8 +377,7 @@
         </div>
         <div id="financeContent" hidden>
           <div class="page-intro">
-            <h1>🔒 Moliyaviy hisobot</h1>
-            <p>Foyda, savdo va eksport/import faqat shu yerda ko'rinadi.</p>
+            <h1>Moliyaviy hisobot</h1>
           </div>
           <div class="kpi-grid" id="finKpiGrid"></div>
           <div class="panel-grid">
@@ -396,9 +393,9 @@
               <div class="card">
                 <h3>Ma'lumotlarni boshqarish</h3>
                 <div class="data-actions">
-                  <button class="btn lg" id="finImportBtn">📥 Fayldan yuklash</button>
+                  <button class="btn lg" id="finImportBtn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 21V9m0 0l-4 4m4-4l4 4M4 3h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Fayldan yuklash</button>
                   <div class="export-wrap">
-                    <button class="btn lg" id="finExportBtn">📤 Yuklab olish</button>
+                    <button class="btn lg" id="finExportBtn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 21h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Yuklab olish</button>
                     <div class="export-menu" id="finExportMenu">
                       <button data-brand="iphone">Faqat iPhone</button>
                       <button data-brand="samsung">Faqat Samsung</button>
@@ -406,10 +403,10 @@
                       <button data-brand="all">Barcha telefonlar</button>
                     </div>
                   </div>
-                  <button class="btn lg danger" id="newMonthBtn">🗓️ Yangi oy boshlash</button>
+                  <button class="btn lg danger" id="newMonthBtn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="2" stroke="currentColor" stroke-width="2"/><path d="M3 10h18M8 3v4M16 3v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg> Yangi oy boshlash</button>
                 </div>
                 <p style="font-size:12px; color:var(--ink-dim); margin-top:12px; line-height:1.6;">
-                  "Yangi oy boshlash" — barcha ma'lumotlarni Excel fayl qilib yuklab beradi, so'ng <b style="color:var(--ink)">sotilgan</b> telefonlarni bazadan o'chiradi. Omborda/band/yo'qolgan telefonlar saqlanib qoladi.
+                  "Yangi oy boshlash" — barcha ma'lumotlarni Excel fayl qilib yuklab beradi, so'ng <b style="color:var(--ink)">sotilgan</b> telefonlarni bazadan o'chiradi. Sotilmagan/band/yo'qolgan telefonlar saqlanib qoladi.
                 </p>
               </div>
             </div>
@@ -437,14 +434,14 @@
     <h2 id="modalTitle">Yangi telefon</h2>
     <div class="modal-sub" id="modalSub">Faqat telefon nomini yozsangiz ham bo'ladi — qolganini keyin to'ldirishingiz mumkin.</div>
     <form id="phoneForm">
-      <div class="form-section-label">📱 Telefon haqida</div>
+      <div class="form-section-label"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><rect x="7" y="2" width="10" height="20" rx="2" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="18" r="1" fill="currentColor"/></svg> Telefon haqida</div>
       <div class="form-grid">
         <div class="field"><label>Turi</label>
           <select id="f_brand"><option value="iphone">iPhone</option><option value="samsung">Samsung</option><option value="other">Boshqa</option></select>
         </div>
         <div class="field"><label>Hozirgi holati</label>
           <select id="f_status">
-            <option value="stock">Omborda (hali sotilmagan)</option>
+            <option value="stock">Sotilmagan (omborda)</option>
             <option value="lent">Band / vaqtincha berilgan</option>
             <option value="lost">Yo'qolgan / o'g'irlangan</option>
             <option value="sold">Sotilgan</option>
@@ -490,33 +487,32 @@
         </div>
       </div>
 
-      <div class="form-section-label">🛒 Kimdan sotib olindi</div>
+      <div class="form-section-label"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="20" r="1.4" fill="currentColor"/><circle cx="18" cy="20" r="1.4" fill="currentColor"/><path d="M2 3h2l2.4 12.2a2 2 0 0 0 2 1.6h8.6a2 2 0 0 0 2-1.6L21 7H6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Kimdan sotib olindi</div>
       <div class="form-grid">
         <div class="field"><label>Ismi</label><input type="text" id="f_source" placeholder="Masalan: Jasur aka"></div>
         <div class="field"><label>Telefon raqami</label><input type="text" id="f_sourcePhone" placeholder="90 123 45 67"></div>
         <div class="field"><label>Qachon olindi</label><input type="date" id="f_buyDate"></div>
         <div class="field"><label>Qancha pulga olindi ($)</label><input type="number" step="1" id="f_buyPrice" class="mono" placeholder="0"></div>
+        <div class="field full"><label>Kichik izoh (ixtiyoriy)</label><input type="text" id="f_note" placeholder="Masalan: kreditga olindi, do'stdan"></div>
       </div>
 
       <div id="soldBlock" hidden>
-        <div class="form-section-label">💰 Kimga sotildi</div>
+        <div class="form-section-label"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="13" rx="2" stroke="currentColor" stroke-width="2"/><path d="M3 10h18" stroke="currentColor" stroke-width="2"/><circle cx="16.5" cy="14.5" r="1.2" fill="currentColor"/></svg> Kimga sotildi</div>
         <div class="form-grid">
           <div class="field"><label>Ismi</label><input type="text" id="f_buyer" placeholder="Masalan: Aziz aka"></div>
           <div class="field"><label>Telefon raqami</label><input type="text" id="f_buyerPhone" placeholder="90 123 45 67"></div>
           <div class="field"><label>Qachon sotildi</label><input type="date" id="f_sellDate"></div>
           <div class="field"><label>Qancha pulga sotildi ($)</label><input type="number" step="1" id="f_sellPrice" class="mono" placeholder="0"></div>
+          <div class="field full"><label>Kichik izoh (ixtiyoriy)</label><input type="text" id="f_sellNote" placeholder="Masalan: kreditga berildi, 3 oyga bo'lib"></div>
         </div>
       </div>
 
-      <div class="form-section-label">📝 Izoh <span>(ixtiyoriy)</span></div>
-      <div class="form-grid">
-        <div class="field full"><textarea id="f_note" placeholder="Masalan: kreditga berilgan, ta'mirlanmoqchi va h.k."></textarea></div>
-      </div>
-
       <div class="form-actions">
-        <button type="button" class="btn lg danger ghost" id="deleteFromEditBtn" hidden style="margin-right:auto; color:var(--danger); border-color:var(--danger);">🗑️ O'chirish</button>
+        <button type="button" class="btn lg danger ghost" id="deleteFromEditBtn" hidden style="margin-right:auto; color:var(--danger); border-color:var(--danger);">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> O'chirish
+        </button>
         <button type="button" class="btn lg" id="cancelPhoneBtn">Bekor qilish</button>
-        <button type="submit" class="btn primary lg" id="savePhoneBtn">✓ Saqlash</button>
+        <button type="submit" class="btn primary lg" id="savePhoneBtn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M4 12l6 6L20 6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg> <span class="btn-label">Saqlash</span></button>
       </div>
     </form>
   </div>
@@ -525,7 +521,7 @@
 <div class="overlay" id="soldOverlay">
   <div class="modal small">
     <button class="modal-close" id="closeSoldModal">&times;</button>
-    <h2>✓ Sotildi</h2>
+    <h2>Sotildi</h2>
     <div class="modal-sub" id="soldModelText"></div>
     <form id="soldForm">
       <div class="form-grid">
@@ -533,10 +529,11 @@
         <div class="field"><label>Telefon raqami</label><input type="text" id="s_buyerPhone" placeholder="90 123 45 67"></div>
         <div class="field"><label>Qancha pulga ($)</label><input type="number" step="1" id="s_sellPrice" class="mono" placeholder="0"></div>
         <div class="field full"><label>Qachon sotildi</label><input type="date" id="s_sellDate"></div>
+        <div class="field full"><label>Kichik izoh (ixtiyoriy)</label><input type="text" id="s_note" placeholder="Masalan: kreditga berildi, 3 oyga bo'lib"></div>
       </div>
       <div class="form-actions">
         <button type="button" class="btn lg" id="cancelSoldBtn">Bekor qilish</button>
-        <button type="submit" class="btn primary lg" id="saveSoldBtn">✓ Sotildi deb belgilash</button>
+        <button type="submit" class="btn primary lg" id="saveSoldBtn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M4 12l6 6L20 6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg> <span class="btn-label">Sotildi deb belgilash</span></button>
       </div>
     </form>
   </div>
@@ -573,12 +570,13 @@
 
     <label class="import-drop" id="importDrop">
       <input type="file" id="importFile" accept=".xlsx,.xls,.csv">
-      <div id="importDropText">📂 Faylni tanlash uchun shu yerga bosing</div>
+      <div style="margin-bottom:8px;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M3 6a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></div>
+      <div id="importDropText"><span class="btn-label">Faylni tanlash uchun shu yerga bosing</span></div>
     </label>
 
     <div id="importConfig" hidden>
       <div class="import-summary" id="importSummary"></div>
-      <button type="button" class="btn sm ghost" id="toggleAdvancedBtn">⚙️ Ustunlarni o'zim moslashtirmoqchiman</button>
+      <button type="button" class="btn sm ghost" id="toggleAdvancedBtn"><span class="btn-label">Ustunlarni o'zim moslashtirmoqchiman</span></button>
       <div id="importAdvanced" hidden>
         <div class="form-grid" style="margin-top:14px">
           <div class="field"><label>Ma'lumotlar boshlanadigan qator</label><input type="number" min="1" id="importStartRow" value="1"></div>
@@ -593,7 +591,7 @@
 
     <div class="form-actions">
       <button type="button" class="btn lg" id="cancelImportBtn">Bekor qilish</button>
-      <button type="button" class="btn primary lg" id="runImportBtn" disabled>✓ Ha, yuklash</button>
+      <button type="button" class="btn primary lg" id="runImportBtn" disabled><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M4 12l6 6L20 6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg> <span class="btn-label">Ha, yuklash</span></button>
     </div>
   </div>
 </div>
@@ -631,7 +629,7 @@
     notes: "",
     sec: {
       iphone: {search:"", status:"all", gen:"all"},
-      samsung:{search:"", status:"all"},
+      samsung:{search:"", status:"all", gen:"all"},
       other:  {search:"", status:"all"}
     },
     editingId: null,
@@ -649,13 +647,13 @@
   var C_17PRO = [["Kosmik To'q sariq","#c9702f"],["Kumush","#d9d9d6"],["Chuqur ko'k","#33445c"]];
   var C_17AIR = [["Osmon ko'k","#a9c6dc"],["Bulut oq","#eeeeee"],["Yengil oltin","#e3cda3"],["Kosmik qora","#2c2c2e"]];
   var C_11 = [["Qora","#0b0c0e"],["Oq","#f4f4f2"],["Yashil","#a6b6a3"],["Sariq","#f2d33c"],["Binafsha","#c0bcd6"],["Qizil","#b91c2b"]];
-  var C_11PRO = [["Space Gray","#54524f"],["Kumush","#e6e6e6"],["Oltin","#f0d8b0"],["Midnight Green","#425b52"]];
+  var C_11PRO = [["Kulrang","#54524f"],["Kumush","#e6e6e6"],["Oltin","#f0d8b0"],["To'q yashil","#425b52"]];
   var C_12 = [["Qora","#0e0f10"],["Oq","#f4f4f2"],["Qizil","#b91c2b"],["Yashil","#a9c6b8"],["Ko'k","#3d5a80"],["Binafsha","#cfc2d9"]];
-  var C_12PRO = [["Grafit","#54524f"],["Kumush","#e6e6e6"],["Oltin","#f0d8b0"],["Pacific Blue","#3a5468"]];
-  var C_13 = [["Pushti","#f0d6d6"],["Ko'k","#a9c1d9"],["Midnight","#1b1d22"],["Starlight","#f0e6d8"],["Qizil","#b91c2b"],["Yashil","#8fae94"]];
-  var C_13PRO = [["Grafit","#4a4a4a"],["Oltin","#f0dfc0"],["Kumush","#e6e6e6"],["Sierra Blue","#a7c1d9"],["Alp Yashil","#728c73"]];
-  var C_14 = [["Ko'k","#7f97b8"],["Binafsha","#cabede"],["Midnight","#1b1d22"],["Starlight","#f0e6d8"],["Qizil","#b91c2b"],["Sariq","#f2d97a"]];
-  var C_14PRO = [["Space Qora","#3a3a3c"],["Kumush","#e6e6e6"],["Oltin","#f0dfc0"],["Deep Purple","#5a4c68"]];
+  var C_12PRO = [["Grafit","#54524f"],["Kumush","#e6e6e6"],["Oltin","#f0d8b0"],["Ko'k","#3a5468"]];
+  var C_13 = [["Pushti","#f0d6d6"],["Ko'k","#a9c1d9"],["Qora","#1b1d22"],["Oq","#f0e6d8"],["Qizil","#b91c2b"],["Yashil","#8fae94"]];
+  var C_13PRO = [["Grafit","#4a4a4a"],["Oltin","#f0dfc0"],["Kumush","#e6e6e6"],["Ochiq ko'k","#a7c1d9"],["Yashil","#728c73"]];
+  var C_14 = [["Ko'k","#7f97b8"],["Binafsha","#cabede"],["Qora","#1b1d22"],["Oq","#f0e6d8"],["Qizil","#b91c2b"],["Sariq","#f2d97a"]];
+  var C_14PRO = [["Qora","#3a3a3c"],["Kumush","#e6e6e6"],["Oltin","#f0dfc0"],["To'q binafsha","#5a4c68"]];
   var C_15 = [["Qora","#3a3a3c"],["Ko'k","#a9c1d9"],["Yashil","#a9c6a0"],["Sariq","#f2e39c"],["Pushti","#f0d6d9"]];
   var C_15PRO = [["Qora Titan","#3a3a3a"],["Oq Titan","#e8e4dc"],["Ko'k Titan","#4c5b6a"],["Tabiiy Titan","#8a8378"]];
   var C_16 = [["Qora","#2e2e30"],["Oq","#f2f2ee"],["Pushti","#f0cfd6"],["Zumrad","#7d9c9c"],["Ultramarin","#5f74c9"]];
@@ -683,11 +681,11 @@
     "13 Pro Max": C_13PRO, "13 Pro": C_13PRO, "13": C_13, "13 Mini": C_13,
     "12 Pro Max": C_12PRO, "12 Pro": C_12PRO, "12": C_12, "12 Mini": C_12,
     "11 Pro Max": C_11PRO, "11 Pro": C_11PRO, "11": C_11,
-    "XS Max": [["Space Gray","#3a3c3e"],["Kumush","#e6e6e6"],["Oltin","#f0d8b0"]],
-    "XS": [["Space Gray","#3a3c3e"],["Kumush","#e6e6e6"],["Oltin","#f0d8b0"]],
+    "XS Max": [["Kulrang","#3a3c3e"],["Kumush","#e6e6e6"],["Oltin","#f0d8b0"]],
+    "XS": [["Kulrang","#3a3c3e"],["Kumush","#e6e6e6"],["Oltin","#f0d8b0"]],
     "XR": [["Qora","#0b0c0e"],["Oq","#f4f4f2"],["Ko'k","#3b5b92"],["Sariq","#f2d33c"],["Marjon","#ff7a5c"],["Qizil","#b91c2b"]],
-    "X": [["Space Gray","#3a3c3e"],["Kumush","#e6e6e6"]],
-    "SE (2022)": [["Midnight","#1b1d22"],["Starlight","#f0e6d8"],["Qizil","#b91c2b"]],
+    "X": [["Kulrang","#3a3c3e"],["Kumush","#e6e6e6"]],
+    "SE (2022)": [["Qora","#1b1d22"],["Oq","#f0e6d8"],["Qizil","#b91c2b"]],
     "SE (2020)": [["Qora","#0b0c0e"],["Oq","#f4f4f2"],["Qizil","#b91c2b"]]
   };
 
@@ -757,6 +755,49 @@
     return "generic";
   }
 
+  function samsungGenAndParty(model){
+    var m = (model||"").toUpperCase();
+    var mm = m.match(/\b(S|A|M)\s?(\d{1,3})/);
+    if(mm){
+      var gen = mm[1]+mm[2];
+      var suffix = "";
+      if(/ULTRA/.test(m)) suffix = " Ultra";
+      else if(/\+|PLUS/.test(m)) suffix = " Plus";
+      else if(/\bFE\b/.test(m)) suffix = " FE";
+      return {gen: gen, party: gen+suffix};
+    }
+    var nm = m.match(/NOTE\s?(\d{1,3})?/);
+    if(nm){
+      var gen2 = "Note"+(nm[1]||"");
+      return {gen: gen2, party: gen2};
+    }
+    var zm = m.match(/Z\s?(FOLD|FLIP)\s?(\d*)/);
+    if(zm){
+      var gen3 = "Z "+zm[1].charAt(0)+zm[1].slice(1).toLowerCase();
+      return {gen: gen3, party: gen3+(zm[2]?" "+zm[2]:"")};
+    }
+    if(/\bTAB/.test(m)) return {gen:"Tab", party:"Tab"};
+    return {gen:"Boshqa", party:"Boshqa"};
+  }
+  function samsungGenSortKey(gen){
+    var m = gen.match(/^([SAM])(\d+)$/);
+    if(m){
+      var prefixOrder = {S:0, A:2, M:3}[m[1]];
+      return prefixOrder*1000 - parseInt(m[2],10);
+    }
+    if(/^Note/.test(gen)) return 500 - (parseInt(gen.replace(/\D/g,""),10)||0);
+    if(/^Z Fold/.test(gen)) return 700;
+    if(/^Z Flip/.test(gen)) return 750;
+    if(gen==="Tab") return 800;
+    return 9999;
+  }
+  var SUFFIX_ORDER = ["Ultra","Plus","","FE"];
+  function samsungPartySortKey(party, gen){
+    var suffix = party.slice(gen.length);
+    var idx = SUFFIX_ORDER.indexOf(suffix);
+    return (idx<0?50:idx);
+  }
+
   /* ====================== helpers ====================== */
   function esc(s){
     s = (s===null||s===undefined) ? "" : String(s);
@@ -789,7 +830,11 @@
     return p.sellPrice - p.buyPrice;
   }
   function statusLabel(s){
-    return {stock:"Omborda", sold:"Sotilgan", lent:"Band", lost:"Yo'qolgan"}[s] || s;
+    return {stock:"Sotilmagan", sold:"Sotilgan", lent:"Band", lost:"Yo'qolgan"}[s] || s;
+  }
+  function setBtnLabel(btn, text){
+    var lbl = btn.querySelector(".btn-label");
+    if(lbl) lbl.textContent = text; else btn.textContent = text;
   }
   function toast(msg, isErr){
     var el = document.createElement("div");
@@ -927,12 +972,16 @@
 
   /* ====================== section shell (per brand) - excel-style table, no pagination, no price ====================== */
   function sectionShellHTML(brand){
-    var genChips = brand==="iphone" ? (
-      '<div class="chip-row" id="genChips-iphone" style="margin-top:8px">'+
-        '<button class="chip active" data-gen="all">Barcha avlodlar</button>'+
-        IPHONE_GENERATIONS.map(function(g){ return '<button class="chip" data-gen="'+g+'">'+g+'</button>'; }).join("")+
-      '</div>'
-    ) : "";
+    var genChips = "";
+    if(brand==="iphone"){
+      genChips =
+        '<div class="chip-row" id="genChips-iphone" style="margin-top:8px">'+
+          '<button class="chip active" data-gen="all">Barcha avlodlar</button>'+
+          IPHONE_GENERATIONS.map(function(g){ return '<button class="chip" data-gen="'+g+'">'+g+'</button>'; }).join("")+
+        '</div>';
+    } else if(brand==="samsung"){
+      genChips = '<div class="chip-row" id="genChips-samsung" style="margin-top:8px"></div>';
+    }
     return ''+
       '<div class="toolbar">'+
         '<button class="btn primary lg" id="addBtn-'+brand+'">+ Yangi telefon qo\'shish</button>'+
@@ -944,7 +993,7 @@
         '</div>'+
         '<div class="chip-row" id="chips-'+brand+'">'+
           '<button class="chip active" data-status="all">Hammasi</button>'+
-          '<button class="chip" data-status="stock">Omborda</button>'+
+          '<button class="chip" data-status="stock">Sotilmagan</button>'+
           '<button class="chip" data-status="sold">Sotilgan</button>'+
           '<button class="chip" data-status="lent">Band</button>'+
           '<button class="chip" data-status="lost">Yo\'qolgan</button>'+
@@ -958,9 +1007,10 @@
               '<th class="rownum">#</th>'+
               '<th data-sort="model">Model</th>'+
               '<th data-sort="imei">IMEI</th>'+
+              '<th data-sort="buyPrice">Narx</th>'+
               '<th data-sort="status">Holati</th>'+
               '<th data-sort="buyDate">Sotib olindi</th>'+
-              '<th data-sort="sellDate">Sotildi</th>'+
+              '<th data-sort="sellDate">Kimga sotildi</th>'+
               '<th></th>'+
             '</tr></thead>'+
             '<tbody id="tbody-'+brand+'"></tbody>'+
@@ -976,6 +1026,9 @@
     if(st.status!=="all") list = list.filter(function(p){ return p.status===st.status; });
     if(brand==="iphone" && st.gen && st.gen!=="all"){
       list = list.filter(function(p){ return iphoneGeneration(iphoneParty(p.model))===st.gen; });
+    }
+    if(brand==="samsung" && st.gen && st.gen!=="all"){
+      list = list.filter(function(p){ return samsungGenAndParty(p.model).gen===st.gen; });
     }
     if(st.search){
       var q = st.search.toLowerCase();
@@ -995,8 +1048,15 @@
     return list;
   }
 
+  function byBuyDateDesc(a,b){
+    if(!a.buyDate && !b.buyDate) return (b.seq||0)-(a.seq||0);
+    if(!a.buyDate) return 1;
+    if(!b.buyDate) return -1;
+    if(a.buyDate!==b.buyDate) return a.buyDate<b.buyDate?1:-1;
+    return (b.seq||0)-(a.seq||0);
+  }
+
   function renderRow(p, i, brand){
-    var pr = profitOf(p);
     var showSoldBtn = p.status!=="sold";
     return '<tr>'+
       '<td class="rownum">'+(i+1)+'</td>'+
@@ -1005,57 +1065,92 @@
         '<div class="cell-sub">'+esc(p.source||"")+'</div>'+
       '</td>'+
       '<td class="mono">'+esc(p.imei||"—")+'</td>'+
+      '<td class="mono price-tag">'+(p.buyPrice!=null?fmtMoney(p.buyPrice):"—")+'</td>'+
       '<td><span class="badge '+p.status+'">'+statusLabel(p.status)+'</span></td>'+
       '<td>'+esc(fmtDate(p.buyDate))+'</td>'+
-      '<td>'+esc(fmtDate(p.sellDate))+(p.buyer?'<div class="cell-sub">'+esc(p.buyer)+'</div>':'')+'</td>'+
+      '<td>'+(p.buyer?'<div class="buyer-name">'+esc(p.buyer)+'</div>':'<span class="cell-sub">—</span>')+(p.sellDate?'<div class="cell-sub">'+esc(fmtDate(p.sellDate))+'</div>':'')+'</td>'+
       '<td><div class="row-actions">'+
         '<button class="btn sm ghost" data-edit="'+p.id+'" data-brand="'+brand+'">Tahrir</button>'+
-        (showSoldBtn ? '<button class="btn sm ghost" data-sold="'+p.id+'" style="color:var(--success)">✓ Sotildi</button>' : '')+
+        (showSoldBtn ? '<button class="btn sm ghost" data-sold="'+p.id+'" style="color:var(--success)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M4 12l6 6L20 6" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg> Sotildi</button>' : '')+
       '</div></td>'+
     '</tr>';
   }
 
+  function rebuildSamsungGenChips(){
+    var genRow = document.getElementById("genChips-samsung");
+    if(!genRow) return;
+    var st = state.sec.samsung;
+    var all = state.phones.filter(function(p){ return p.brand==="samsung"; });
+    var gens = {};
+    all.forEach(function(p){ gens[samsungGenAndParty(p.model).gen] = true; });
+    var genNames = Object.keys(gens).sort(function(a,b){ return samsungGenSortKey(a)-samsungGenSortKey(b); });
+    genRow.innerHTML = '<button class="chip'+(st.gen==="all"?' active':'')+'" data-gen="all">Barcha avlodlar</button>'+
+      genNames.map(function(g){ return '<button class="chip'+(st.gen===g?' active':'')+'" data-gen="'+esc(g)+'">'+esc(g)+'</button>'; }).join("");
+  }
+
   function renderSection(brand){
     var st = state.sec[brand];
+    if(brand==="samsung") rebuildSamsungGenChips();
     var list = filteredPhones(brand);
     var tbody = document.getElementById("tbody-"+brand);
     if(!tbody) return;
 
     if(!list.length){
-      tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state">Hech narsa topilmadi</div></td></tr>';
+      tbody.innerHTML = '<tr><td colspan="8"><div class="empty-state">Hech narsa topilmadi</div></td></tr>';
     } else {
-      var active = st.status==="all" ? list.filter(function(p){return p.status!=="sold";}) : list;
-      var sold = st.status==="all" ? list.filter(function(p){return p.status==="sold";}) : [];
+      var tiers;
+      if(st.status==="all"){
+        tiers = [
+          {items: list.filter(function(p){return p.status!=="sold" && p.status!=="lent";}), label:null},
+          {items: list.filter(function(p){return p.status==="lent";}), label:"Band"},
+          {items: list.filter(function(p){return p.status==="sold";}), label:"Sotilgan"}
+        ];
+      } else {
+        tiers = [{items: list, label:null}];
+      }
 
       var html = "";
       var rowNum = 0;
 
+      function partyFnFor(brand){
+        if(brand==="iphone") return function(model){ return iphoneParty(model); };
+        if(brand==="samsung") return function(model){ return samsungGenAndParty(model).party; };
+        return null;
+      }
+      function partySortFor(brand){
+        if(brand==="iphone") return partySortKey;
+        if(brand==="samsung") return function(party){
+          var gen = samsungGenAndParty(party).gen;
+          return samsungGenSortKey(gen)*10 + samsungPartySortKey(party, gen);
+        };
+        return null;
+      }
+      var partyFn = partyFnFor(brand), partySortFn = partySortFor(brand);
+
       function renderGroup(items){
-        if(brand!=="iphone"){
-          items.sort(function(a,b){ return (b.seq||0)-(a.seq||0); });
-          items.forEach(function(p){ rowNum++; html += renderRow(p, rowNum-1, brand); });
+        if(!partyFn){
+          items.slice().sort(byBuyDateDesc).forEach(function(p){ rowNum++; html += renderRow(p, rowNum-1, brand); });
           return;
         }
         var groups = {};
         items.forEach(function(p){
-          var party = iphoneParty(p.model);
+          var party = partyFn(p.model);
           if(!groups[party]) groups[party] = [];
           groups[party].push(p);
         });
-        var partyNames = Object.keys(groups).sort(function(a,b){ return partySortKey(a)-partySortKey(b); });
+        var partyNames = Object.keys(groups).sort(function(a,b){ return partySortFn(a)-partySortFn(b); });
         partyNames.forEach(function(party){
-          var rows = groups[party];
-          rows.sort(function(a,b){ return (b.seq||0)-(a.seq||0); });
-          html += '<tr class="group-row"><td colspan="7">'+esc(party==="Boshqa"?"Aniqlanmagan model":party)+' <span>('+rows.length+' dona)</span></td></tr>';
+          var rows = groups[party].slice().sort(byBuyDateDesc);
+          html += '<tr class="group-row"><td colspan="8">'+esc(party==="Boshqa"?"Aniqlanmagan model":party)+' <span>('+rows.length+' dona)</span></td></tr>';
           rows.forEach(function(p){ rowNum++; html += renderRow(p, rowNum-1, brand); });
         });
       }
 
-      renderGroup(active);
-      if(sold.length){
-        html += '<tr class="sold-divider"><td colspan="7">— Sotilganlar ('+sold.length+' ta) —</td></tr>';
-        renderGroup(sold);
-      }
+      tiers.forEach(function(tier){
+        if(!tier.items.length) return;
+        if(tier.label) html += '<tr class="tier-divider"><td colspan="8">'+tier.label+' ('+tier.items.length+' ta)</td></tr>';
+        renderGroup(tier.items);
+      });
       tbody.innerHTML = html;
     }
 
@@ -1109,7 +1204,7 @@
     var kpis = [
       {label:"Jami telefonlar", value:all.length+" dona", cls:"", sub:"Barcha bo'limlar bo'yicha"},
       {label:"Sotilgan", value:sold.length+" dona", cls:"success", sub:"Jami sotilgan telefonlar"},
-      {label:"Omborda qolgan", value:stock.length+" dona", cls:"", sub:"Hali sotilmagan"},
+      {label:"Sotilmagan", value:stock.length+" dona", cls:"", sub:"Hali omborda"},
       {label:"Band / berilgan", value:lent.length+" dona", cls:"gold", sub:"Vaqtincha berilgan"},
       {label:"Yo'qolgan", value:lost.length+" dona", cls:lost.length?"danger":"", sub:lost.length?"E'tibor bering":"Yo'q, hammasi joyida"}
     ];
@@ -1178,7 +1273,7 @@
       {label:"Sof foyda", value:fmtMoney(totalProfit), cls:totalProfit>=0?"success":"danger", sub:sold.length+" ta telefon sotilgan"},
       {label:"Jami sotuv summasi", value:fmtMoney(totalRevenue), cls:"", sub:"Sotilgan telefonlardan tushgan pul"},
       {label:"Foyda foizi", value:margin.toFixed(1)+"%", cls:"gold", sub:"Har $100 xarajatdan qancha foyda"},
-      {label:"Omborda qiymati", value:fmtMoney(capitalInStock), cls:"", sub:stock.length+" ta telefon"},
+      {label:"Sotilmagan qiymati", value:fmtMoney(capitalInStock), cls:"", sub:stock.length+" ta telefon"},
       {label:"Yo'qolgan zarar", value:lostValue?fmtMoney(lostValue):"$0", cls:lostValue?"danger":"", sub:lost.length+" ta telefon"}
     ];
     document.getElementById("finKpiGrid").innerHTML = kpis.map(function(k){
@@ -1365,13 +1460,14 @@
     document.getElementById("f_imeiBox").value = p && p.imeiBox ? "1" : "0";
     document.getElementById("f_source").value = p ? (p.source||"") : "";
     document.getElementById("f_sourcePhone").value = p ? (p.sourcePhone||"") : "";
-    document.getElementById("f_buyDate").value = p ? (p.buyDate||"") : "";
+    document.getElementById("f_buyDate").value = p ? (p.buyDate||"") : new Date().toISOString().slice(0,10);
     document.getElementById("f_buyPrice").value = p && p.buyPrice!=null ? p.buyPrice : "";
     document.getElementById("f_buyer").value = p ? (p.buyer||"") : "";
     document.getElementById("f_buyerPhone").value = p ? (p.buyerPhone||"") : "";
-    document.getElementById("f_sellDate").value = p ? (p.sellDate||"") : "";
+    document.getElementById("f_sellDate").value = p ? (p.sellDate||"") : new Date().toISOString().slice(0,10);
     document.getElementById("f_sellPrice").value = p && p.sellPrice!=null ? p.sellPrice : "";
     document.getElementById("f_note").value = p ? (p.note||"") : "";
+    document.getElementById("f_sellNote").value = p ? (p.sellNote||"") : "";
 
     populateIphoneModels(null);
     document.getElementById("f_ip_color").value = "";
@@ -1383,12 +1479,22 @@
 
     if(p && useBrand==="iphone" && p.model){
       var parts = p.model.split(" - ");
-      if(parts.length>=5){
-        populateIphoneModels(parts[0]);
-        document.getElementById("f_ip_color").value = parts[1];
-        document.getElementById("f_ip_memory").value = parts[2];
-        document.getElementById("f_ip_battery").value = parseInt(parts[3],10) || "";
-        document.getElementById("f_ip_region").value = parts[4];
+      var normModel = parts[0] ? parts[0].trim() : "";
+      if(IPHONE_MODELS.indexOf(normModel)!==-1){
+        populateIphoneModels(normModel);
+        var mem="256GB", batt="", region="", color="";
+        parts.slice(1).forEach(function(seg){
+          seg = seg.trim();
+          if(!seg) return;
+          if(/^\d+\s?(GB|TB)$/i.test(seg)) mem = seg;
+          else if(/^\d+%$/.test(seg)) batt = seg.replace("%","");
+          else if(seg.indexOf("/")!==-1) region = seg;
+          else color = seg;
+        });
+        document.getElementById("f_ip_color").value = color;
+        document.getElementById("f_ip_memory").value = mem;
+        document.getElementById("f_ip_battery").value = batt;
+        document.getElementById("f_ip_region").value = region;
       }
     }
 
@@ -1440,10 +1546,11 @@
       sellDate: document.getElementById("f_sellDate").value,
       sellPrice: num(document.getElementById("f_sellPrice").value),
       note: document.getElementById("f_note").value.trim(),
+      sellNote: document.getElementById("f_sellNote").value.trim(),
       updatedAt: new Date().toISOString()
     };
     var saveBtn = document.getElementById("savePhoneBtn");
-    saveBtn.disabled = true; saveBtn.textContent = "Saqlanmoqda…";
+    saveBtn.disabled = true; setBtnLabel(saveBtn, "Saqlanmoqda…");
     try{
       if(state.editingId){
         await phonesCol.doc(state.editingId).update(data);
@@ -1458,7 +1565,7 @@
     }catch(e){
       toast("Saqlashda xatolik: "+(e.code||e.message||"noma'lum"), true);
     }
-    saveBtn.disabled = false; saveBtn.textContent = "✓ Saqlash";
+    saveBtn.disabled = false; setBtnLabel(saveBtn, "Saqlash");
   }
 
   /* ====================== delete confirm ====================== */
@@ -1491,9 +1598,10 @@
   document.getElementById("confirmOk").addEventListener("click", doConfirm);
 
   document.getElementById("deleteFromEditBtn").addEventListener("click", function(){
-    if(!state.editingId) return;
+    var id = state.editingId;
+    if(!id) return;
     closePhoneModal();
-    openConfirm(state.editingId);
+    openConfirm(id);
   });
 
   /* ====================== mark as sold ====================== */
@@ -1506,6 +1614,7 @@
     document.getElementById("s_buyerPhone").value = "";
     document.getElementById("s_sellPrice").value = p && p.buyPrice!=null ? p.buyPrice : "";
     document.getElementById("s_sellDate").value = new Date().toISOString().slice(0,10);
+    document.getElementById("s_note").value = "";
     document.getElementById("soldOverlay").classList.add("open");
     document.getElementById("s_buyer").focus();
   }
@@ -1521,7 +1630,7 @@
     if(!soldTargetId || !phonesCol) return;
     var num = function(v){ v = v.trim(); if(v==="") return null; var n = Number(v); return isNaN(n)?null:n; };
     var btn = document.getElementById("saveSoldBtn");
-    btn.disabled = true; btn.textContent = "Saqlanmoqda…";
+    btn.disabled = true; setBtnLabel(btn, "Saqlanmoqda…");
     try{
       await phonesCol.doc(soldTargetId).update({
         status: "sold",
@@ -1529,6 +1638,7 @@
         buyerPhone: document.getElementById("s_buyerPhone").value.trim(),
         sellPrice: num(document.getElementById("s_sellPrice").value),
         sellDate: document.getElementById("s_sellDate").value,
+        sellNote: document.getElementById("s_note").value.trim(),
         updatedAt: new Date().toISOString()
       });
       toast("Sotilgan deb belgilandi");
@@ -1536,7 +1646,7 @@
     }catch(e){
       toast("Saqlashda xatolik: "+(e.code||e.message), true);
     }
-    btn.disabled = false; btn.textContent = "✓ Sotildi deb belgilash";
+    btn.disabled = false; setBtnLabel(btn, "Sotildi deb belgilash");
   });
 
   /* ====================== export (with filename prompt) ====================== */
@@ -1662,8 +1772,8 @@
     importParsed = null;
     document.getElementById("importConfig").hidden = true;
     document.getElementById("importAdvanced").hidden = true;
-    document.getElementById("toggleAdvancedBtn").textContent = "⚙️ Ustunlarni o'zim moslashtirmoqchiman";
-    document.getElementById("importDropText").textContent = "📂 Faylni tanlash uchun shu yerga bosing";
+    setBtnLabel(document.getElementById("toggleAdvancedBtn"), "Ustunlarni o'zim moslashtirmoqchiman");
+    setBtnLabel(document.getElementById("importDropText"), "Faylni tanlash uchun shu yerga bosing");
     document.getElementById("runImportBtn").disabled = true;
     document.getElementById("importFile").value = "";
     document.getElementById("importOverlay").classList.add("open");
@@ -1797,10 +1907,10 @@
     records.forEach(function(r){ counts[r.brand]++; });
     var summaryEl = document.getElementById("importSummary");
     if(!records.length){
-      summaryEl.innerHTML = '<div class="big">😕 Telefon topilmadi</div><div class="badges">Fayl bo\'sh bo\'lishi yoki "Ustunlarni o\'zim moslashtirmoqchiman" orqali tekshirish kerak bo\'lishi mumkin.</div>';
+      summaryEl.innerHTML = '<div class="big">Telefon topilmadi</div><div class="badges">Fayl bo\'sh bo\'lishi yoki "Ustunlarni o\'zim moslashtirmoqchiman" orqali tekshirish kerak bo\'lishi mumkin.</div>';
     } else {
       summaryEl.innerHTML =
-        '<div class="big">✅ '+records.length+' ta telefon topildi</div>'+
+        '<div class="big">'+records.length+' ta telefon topildi</div>'+
         '<div class="badges">'+
           '<span><span class="brandtag iphone">iPhone</span> <b>'+counts.iphone+'</b> ta</span>'+
           '<span><span class="brandtag samsung">Samsung</span> <b>'+counts.samsung+'</b> ta</span>'+
@@ -1813,7 +1923,7 @@
   document.getElementById("importFile").addEventListener("change", function(e){
     var file = e.target.files[0];
     if(!file) return;
-    document.getElementById("importDropText").textContent = file.name;
+    setBtnLabel(document.getElementById("importDropText"), file.name);
     var reader = new FileReader();
     reader.onload = function(ev){
       try{
@@ -1854,7 +1964,7 @@
     var records = buildRecordsFromMapping();
     if(!records.length) return;
     var btn = document.getElementById("runImportBtn");
-    btn.disabled = true; btn.textContent = "Import qilinmoqda…";
+    btn.disabled = true; setBtnLabel(btn, "Import qilinmoqda…");
     var progWrap = document.getElementById("importProgress"), progBar = document.getElementById("importProgressBar");
     progWrap.style.display = "block";
     var now = new Date().toISOString();
@@ -1879,7 +1989,7 @@
     }catch(e){
       toast("Import xatosi: "+(e.code||e.message), true);
     }
-    btn.disabled = false; btn.textContent = "✓ Ha, yuklash";
+    btn.disabled = false; setBtnLabel(btn, "Ha, yuklash");
     progWrap.style.display = "none"; progBar.style.width = "0%";
   }
 
@@ -1901,7 +2011,7 @@
   document.getElementById("toggleAdvancedBtn").addEventListener("click", function(){
     var el = document.getElementById("importAdvanced");
     el.hidden = !el.hidden;
-    this.textContent = el.hidden ? "⚙️ Ustunlarni o'zim moslashtirmoqchiman" : "▲ Yashirish";
+    setBtnLabel(this, el.hidden ? "Ustunlarni o'zim moslashtirmoqchiman" : "Yashirish");
   });
   document.getElementById("filenameOverlay").addEventListener("click", function(e){ if(e.target.id==="filenameOverlay"){ this.classList.remove("open"); state.pendingExport=null; } });
 
